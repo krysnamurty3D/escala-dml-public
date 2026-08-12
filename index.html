@@ -185,6 +185,10 @@ header{position:relative;}
 .rp-check-wrap{display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:11px;color:#7a9aa8;}
 .rp-check-wrap input[type=checkbox]{accent-color:#2ab482;width:14px;height:14px;cursor:pointer;}
 .rp-share-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px;}
+.rp-obs-wrap{margin:6px 0 2px;}
+.rp-obs-lbl{font-size:11px;color:#7a9aa8;display:block;margin-bottom:3px;}
+.rp-obs{width:100%;box-sizing:border-box;background:#111820;border:1px solid #2a3a4a;border-radius:8px;color:#e0e8f0;font-size:12px;font-family:inherit;padding:7px 10px;resize:vertical;}
+.rp-obs:focus{outline:none;border-color:#2ab482;}
 .rp-share-btn{background:#162030;border:1px solid #2a3a4a;border-radius:9px;padding:10px 6px;font-size:11px;font-weight:700;color:#7a9aa8;cursor:pointer;font-family:inherit;text-align:center;line-height:1.4;}
 .rp-share-btn:hover{border-color:#2ab482;color:#2ab482;}
 .rp-share-btn span{display:block;font-size:16px;margin-bottom:3px;}
@@ -444,7 +448,7 @@ iniciarRealizados();
 var _RP={state:"login",slug:null,nome:null,cultoKey:null,cultoLabel:null,cfg:null,fsDoc:null};
 var _RP_PROJ="escala-dml",_RP_KEY="AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc";
 var _RP_CFG_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/rider-config.json";
-var _RP_INSTRS=["BATERIA","BAIXO","CAJON","GUITARRA","PIANO","TALKBACK","TECLADO","VIOLÃO","VOZ","VS"];
+var _RP_INSTRS=["BATERIA","BAIXO","CAJON","GUITARRA","PIANO","TECLADO","VIOLÃO","VOZ","VS"];
 function _rpSlug(n){return(n||"").toLowerCase().replace(/[àáâãä]/g,"a").replace(/[èéêë]/g,"e").replace(/[ìíîï]/g,"i").replace(/[òóôõö]/g,"o").replace(/[ùúûü]/g,"u").replace(/ç/g,"c").replace(/[^a-z0-9]/g,"_").replace(/_+/g,"_").replace(/^_|_$/g,"");}
 function _rpFsParse(v){if(!v)return null;if(v.stringValue!==undefined)return v.stringValue;if(v.integerValue!==undefined)return parseInt(v.integerValue);if(v.booleanValue!==undefined)return v.booleanValue;if(v.nullValue!==undefined)return null;if(v.arrayValue)return(v.arrayValue.values||[]).map(_rpFsParse);if(v.mapValue){var o={};Object.entries(v.mapValue.fields||{}).forEach(function(e){o[e[0]]=_rpFsParse(e[1]);});return o;}return null;}
 function _rpFsEnc(v){if(v===null||v===undefined)return{nullValue:null};if(typeof v==="boolean")return{booleanValue:v};if(typeof v==="number")return Number.isInteger(v)?{integerValue:String(v)}:{doubleValue:v};if(typeof v==="string")return{stringValue:v};if(Array.isArray(v))return{arrayValue:{values:v.map(_rpFsEnc)}};if(typeof v==="object"){var f={};Object.entries(v).forEach(function(e){f[e[0]]=_rpFsEnc(e[1]);});return{mapValue:{fields:f}};}return{stringValue:String(v)};}
@@ -454,8 +458,8 @@ function _rpHtml(h){document.getElementById("rp-content").innerHTML=h;}
 function _rpInstrOpts(sel){return _RP_INSTRS.map(function(x){return'<option value="'+x+'"'+(x===sel?' selected':'')+'>'+x+'</option>';}).join("");}
 function _rpHdr(backFn){
   var b=backFn?'<button style="background:none;border:none;color:#2ab482;font-size:22px;cursor:pointer;padding:0;line-height:1;margin-right:10px" onclick="'+backFn+'()">&#8592;</button>':"";
-  var sub=_RP.cultoLabel?'<div class="rp-hdr-culto"><span class="rp-hdr-tag">&#127925;</span> '+_RP.cultoLabel+'</div>':'<div class="rp-hdr-culto"><span class="rp-hdr-tag">&#127925; Rider T&#233;cnico</span></div>';
-  return'<div class="rp-hdr-box"><div style="display:flex;align-items:flex-start">'+b+'<div><div class="rp-hdr-grupo">'+(_RP.nome||"Acesso L&#237;deres")+'</div>'+sub+'</div></div></div>';
+  var sub=_RP.cultoLabel?'<div class="rp-hdr-culto"><span class="rp-hdr-tag">🎵</span> '+_RP.cultoLabel+'</div>':'<div class="rp-hdr-culto"><span class="rp-hdr-tag">🎛 RIDER TÉCNICO</span></div>';
+  return'<div class="rp-hdr-box"><div style="display:flex;align-items:flex-start">'+b+'<div><div class="rp-hdr-grupo">'+(_RP.nome||"Acesso Líderes")+'</div>'+sub+'</div></div></div>';
 }
 function _rpMostrarLogin(){
   _RP.state="login";_RP.nome=null;_RP.cultoKey=null;_RP.cultoLabel=null;
@@ -514,8 +518,9 @@ function _rpAbrirEditor(key,labelEnc){
       var rd=cultos[key]||{};
       var inp=rd.inputList&&rd.inputList.length?rd.inputList:[{instrumento:"VOZ",fone:false,canta:false}];
       var set=rd.setList&&rd.setList.length?rd.setList:[{musica:"",solo:""}];
+      _RP.obs=rd.obs||"";
       _rpRenderEditor(inp,set);
-    }).catch(function(){_rpRenderEditor([{instrumento:"VOZ",fone:false,canta:false}],[{musica:"",solo:""}]);});
+    }).catch(function(){_RP.obs="";_rpRenderEditor([{instrumento:"VOZ",fone:false,canta:false}],[{musica:"",solo:""}]);});
 }
 function _rpRenderEditor(inp,set){
   window._rpInpCount=inp.length;window._rpSetCount=set.length;
@@ -538,14 +543,15 @@ function _rpRenderEditor(inp,set){
   var cont=(_RP.cfg&&_RP.cfg.contatos)||{};
   var shareBtns=
     '<div class="rp-share-row">'
-    +'<button class="rp-share-btn" onclick="_rpShare(\'tecnico\')"><span>&#127922;</span>T&#233;cnico</button>'
-    +'<button class="rp-share-btn" onclick="_rpShare(\'midia\')"><span>&#128250;</span>M&#237;dia</button>'
-    +'<button class="rp-share-btn" onclick="_rpShare(\'surdos\')"><span>&#129310;</span>Surdos</button>'
+    +'<button class="rp-share-btn" onclick="_rpShare(\'tecnico\')"><span>🎚</span>Técnico</button>'
+    +'<button class="rp-share-btn" onclick="_rpShare(\'midia\')"><span>📺</span>Mídia</button>'
+    +'<button class="rp-share-btn" onclick="_rpShare(\'surdos\')"><span>🤟</span>Surdos</button>'
     +'</div>';
   _rpHtml(_rpHdr("_rpMostrarCultos")
-    +'<div class="rp-sec" style="margin-top:4px">&#127930; Input List</div>'
+    +'<div class="rp-sec" style="margin-top:4px">🎚 Input List</div>'
     +'<table class="rp-tbl"><thead><tr><th>#</th><th>Instrumento</th><th title="Fone de ouvido">&#127911;</th><th title="Canta">&#127908;</th><th></th></tr></thead><tbody>'+inpRows+'</tbody></table>'
     +'<button class="rp-add" onclick="_rpAddInp()">+ Adicionar</button>'
+    +'<div class="rp-obs-wrap"><label class="rp-obs-lbl">📝 Observações / Equipamentos especiais</label><textarea id="rp-obs" class="rp-obs" rows="2" placeholder="Ex.: TALKBACK, monitor de retorno, DI box...">'+(window._RP&&_RP.obs||'')+'</textarea></div>'
     +'<div class="rp-sec">&#127925; Set List</div>'
     +'<table class="rp-tbl"><thead><tr><th>#</th><th>Música</th><th>Solo</th><th></th></tr></thead><tbody>'+setRows+'</tbody></table>'
     +'<button class="rp-add" onclick="_rpAddSet()">+ Adicionar música</button>'
@@ -566,7 +572,10 @@ function _rpColeta(){
     var m=document.getElementById("set_mus_"+j),s=document.getElementById("set_sol_"+j);
     if(m&&m.value.trim())set.push({musica:m.value.trim(),solo:s?s.value.trim():""});
   }
-  return{inputList:inp,setList:set};
+  var obsEl=document.getElementById("rp-obs");
+  var obs=obsEl?obsEl.value.trim():"";
+  if(window._RP)_RP.obs=obs;
+  return{inputList:inp,setList:set,obs:obs};
 }
 function _rpRemInp(i){var d=_rpColeta();d.inputList.splice(i,1);if(!d.inputList.length)d.inputList=[{instrumento:"VOZ",fone:false,canta:false}];_rpRenderEditor(d.inputList,d.setList);}
 function _rpRemSet(i){var d=_rpColeta();d.setList.splice(i,1);if(!d.setList.length)d.setList=[{musica:"",solo:""}];_rpRenderEditor(d.inputList,d.setList);}
@@ -576,7 +585,7 @@ function _rpSalvar(){
   var d=_rpColeta();
   var doc=_RP.fsDoc||{};
   var cultos=doc.fields&&doc.fields.cultos?_rpFsParse(doc.fields.cultos):{};
-  cultos[_RP.cultoKey]={inputList:d.inputList,setList:d.setList,updatedAt:Date.now()};
+  cultos[_RP.cultoKey]={inputList:d.inputList,setList:d.setList,obs:d.obs,updatedAt:Date.now()};
   var body={fields:{cultos:_rpFsEnc(cultos)}};
   var url="https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/riders/"+_RP.slug+"?key="+_RP_KEY;
   fetch(url,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
@@ -608,7 +617,8 @@ function _rpShare(dest){
   var hdr="🎛 *Rider — "+_RP.nome+"*\n📅 "+_RP.cultoLabel+"\n\n";
   var setTxt=d.setList.length?"🎵 *SET LIST*\n"+d.setList.map(function(r,i){return(i+1)+". "+r.musica+(r.solo?" — Solo: "+r.solo:"");}).join("\n"):"";
   var inpTxt=(dest==="tecnico"&&d.inputList.length)?"🎚 *INPUT LIST*\n"+_rpFmtInp(d.inputList)+"\n\n":"";
-  var txt=hdr+inpTxt+setTxt;
+  var obsTxt=(dest==="tecnico"&&d.obs)?"\n📝 *Observações*\n"+d.obs+"\n":"";
+  var txt=hdr+inpTxt+setTxt+obsTxt;
   var url=phone?"https://wa.me/"+phone.replace(/\D/g,"")+"?text="+encodeURIComponent(txt):"https://wa.me/?text="+encodeURIComponent(txt);
   window.open(url,"_blank");
 }
