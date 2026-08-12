@@ -144,6 +144,41 @@ body.light .aguardando-titulo{color:#4a6070;}body.light .aguardando-sub{color:#7
 .mes-tab{font-size:11px;padding:5px 9px;}
 .mes-badge{font-size:12px;padding:5px 10px;}
 .btn-ico{padding:5px 8px;font-size:16px;}}
+.rp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:300;display:flex;align-items:flex-end;justify-content:center;}
+.rp-panel{background:#1e2d40;border-top:3px solid #2ab482;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;padding:22px 20px 32px;position:relative;border-radius:14px 14px 0 0;}
+@media(min-width:640px){.rp-overlay{align-items:center;}.rp-panel{border-radius:14px;max-height:88vh;margin:20px;}}
+.rp-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#7a9aa8;font-size:22px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:6px;}
+.rp-close:hover{color:#fff;background:rgba(255,255,255,.1);}
+.rp-title{font-size:15px;font-weight:800;color:#2ab482;margin-bottom:2px;}
+.rp-sub{font-size:11px;color:#7a9aa8;margin-bottom:18px;}
+.rp-label{display:block;font-size:11px;font-weight:700;color:#7a9aa8;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.rp-inp{width:100%;background:#162030;border:1px solid #2a3a4a;border-radius:8px;color:#edf4f4;font-size:14px;padding:10px 12px;font-family:inherit;outline:none;margin-bottom:14px;}
+.rp-inp:focus{border-color:#2ab482;}
+.rp-sel{width:100%;background:#162030;border:1px solid #2a3a4a;border-radius:8px;color:#edf4f4;font-size:14px;padding:10px 12px;font-family:inherit;outline:none;margin-bottom:14px;cursor:pointer;}
+.rp-btn{background:#2ab482;color:#061208;border:none;border-radius:9px;padding:11px 20px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;margin-bottom:8px;}
+.rp-btn:hover{background:#22a070;}
+.rp-btn-out{background:rgba(42,180,130,.1);color:#2ab482;border:1px solid #2ab482;border-radius:9px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.rp-btn-out:hover{background:rgba(42,180,130,.2);}
+.rp-err{font-size:12px;color:#e06060;margin-bottom:10px;}
+.rp-culto-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#162030;border:1px solid #2a3a4a;border-radius:9px;margin-bottom:8px;cursor:pointer;}
+.rp-culto-item:hover{border-color:#2ab482;}
+.rp-culto-nome{font-size:13px;font-weight:700;color:#edf4f4;}
+.rp-culto-sub{font-size:11px;color:#7a9aa8;margin-top:2px;}
+.rp-sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7a9aa8;margin:16px 0 10px;}
+.rp-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px;}
+.rp-tbl th{color:#7a9aa8;font-size:10px;font-weight:700;text-transform:uppercase;padding:3px 5px;text-align:left;border-bottom:1px solid #2a3a4a;}
+.rp-tbl td{padding:3px 3px;}
+.rp-cell{width:100%;background:#162030;border:1px solid #2a3a4a;border-radius:5px;color:#edf4f4;font-size:12px;padding:5px 6px;font-family:inherit;outline:none;}
+.rp-cell:focus{border-color:#2ab482;}
+.rp-rm{background:none;border:none;color:#e06060;cursor:pointer;font-size:15px;padding:3px 5px;}
+.rp-add{background:none;border:1px dashed #2a3a4a;color:#7a9aa8;border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit;width:100%;margin-bottom:12px;}
+.rp-add:hover{border-color:#2ab482;color:#2ab482;}
+.rp-footer-link{background:none;border:none;color:#5a7a8a;font-size:11px;cursor:pointer;font-family:inherit;padding:0;text-decoration:underline;}
+.rp-footer-link:hover{color:#2ab482;}
+body.light .rp-panel{background:#f0f6ff;border-top-color:#1a9068;}
+body.light .rp-inp,.body.light .rp-sel{background:#e8f0f8;border-color:#b0c8d8;color:#1a2535;}
+body.light .rp-cell{background:#e8f0f8;border-color:#b0c8d8;color:#1a2535;}
+body.light .rp-culto-item{background:#e8f0f8;border-color:#b0c8d8;}
 </style>
 </head>
 <body>
@@ -162,8 +197,9 @@ body.light .aguardando-titulo{color:#4a6070;}body.light .aguardando-sub{color:#7
 <div class="aguardando-escala"><div class="aguardando-icone">📋</div><div class="aguardando-titulo">Aguardando escala</div><div class="aguardando-sub">A escala de Setembro 2026 ainda não foi definida.</div></div>
 </main>
 <div class="realizados-sec" id="realizados-sec"><button class="realizados-toggle" id="realizados-toggle" onclick="toggleRealizados()"><span>📄 Cultos realizados (<span id="realizados-count">0</span>)</span><span class="arrow">▾</span></button><div class="realizados-body" id="realizados-body" style="display:none"></div></div>
-<div class="updated">Atualizado em 01 de agosto de 2026</div>
-<footer><strong>Departamento de Música e Louvor</strong>Igreja Evangélica Congregacional Central</footer>
+<div class="updated">Atualizado em 12 de agosto de 2026</div>
+<footer><strong>Departamento de Música e Louvor</strong>Igreja Evangélica Congregacional Central<br><button class="rp-footer-link" onclick="abrirRiderPanel()" style="margin-top:6px">🎛 Acesso Líderes</button></footer>
+<div id="rp-overlay" class="rp-overlay" style="display:none" onclick="if(event.target===this)fecharRiderPanel()"><div class="rp-panel" id="rp-panel"><button class="rp-close" onclick="fecharRiderPanel()">✕</button><div id="rp-content"></div></div></div>
 <script>
 var CULTOS_ATUAL=[{"data":"02","dia":"Domingo","hora":"9:00","culto":"CEIA DO SENHOR","dirigente":"Pb. Esdras Nunes","grupos":["S&H (SALMOS E HINOS)","CORAL ROBERT KALLEY","CANTO NOVO"]},{"data":"02","dia":"Domingo","hora":"18:00","culto":"CULTO DE ADORAÇÃO","dirigente":"Pb. Demetrio","grupos":["S&H (SALMOS E HINOS)","CORAL CANÇÃO DE PAZ","CANTO NOVO"]},{"data":"04","dia":"Terça","hora":"19:30","culto":"CULTO DA MEN","dirigente":"Pb. Fred","grupos":["S&H (SALMOS E HINOS)"]},{"data":"06","dia":"Quinta","hora":"19:30","culto":"AULA INAUGURAL CURSO BÁSICO EM TEOLOGIA","dirigente":"D.E.C","grupos":["S&H (SALMOS E HINOS)"]},{"data":"09","dia":"Domingo","hora":"9:00","culto":"DIA DOS PAIS / CONFERÊNCIA MISSIONÁRIA","dirigente":"","grupos":["S&H (SALMOS E HINOS)","CORAL CRESCENDO EM CRISTO","COMUNHÃO"]},{"data":"09","dia":"Domingo","hora":"18:00","culto":"CONFERÊNCIA MISSIONÁRIA","dirigente":"","grupos":["S&H (SALMOS E HINOS)","THIAGO E GABRIELLY LEMOS","COMUNHÃO"]},{"data":"11","dia":"Terça","hora":"19:30","culto":"CULTO DA FAMÍLIA -","dirigente":"","grupos":["S&H (SALMOS E HINOS)","REDENÇÃO"]},{"data":"13","dia":"Quinta","hora":"19:30","culto":"CULTO DE DOUTRINA","dirigente":"Pr. Moisés","grupos":["S&H (SALMOS E HINOS)"]},{"data":"16","dia":"Domingo","hora":"9:00","culto":"COMEMORAÇÃO AO DIA DA EBD (DEC)","dirigente":"Pb. Demétrio","grupos":["S&H (SALMOS E HINOS)","KYRIOS","ADONAI"]},{"data":"16","dia":"Domingo","hora":"18:00","culto":"CULTO DE ADORAÇÃO","dirigente":"Dc. Kaio Samuel","grupos":["S&H (SALMOS E HINOS)","CORAL ROBERT KALLEY","ADONAI"]},{"data":"18","dia":"Terça","hora":"19:30","culto":"CULTO DE ORAÇÃO","dirigente":"","grupos":["S&H (SALMOS E HINOS)","ADORADORAS DO REI"]},{"data":"20","dia":"Quinta","hora":"19:30","culto":"CULTO DE DOUTRINA","dirigente":"","grupos":["S&H (SALMOS E HINOS)","QUARTETO KERIGMA"]},{"data":"22","dia":"Sábado","hora":"19:30","culto":"CULTO DA JUVENTUDE -","dirigente":"","grupos":["ADORARE"]},{"data":"23","dia":"Domingo","hora":"9:00","culto":"EBD","dirigente":"Pb. Demétrio","grupos":["S&H (SALMOS E HINOS)","CHAMA ARDENTE","REDENÇÃO"]},{"data":"23","dia":"Domingo","hora":"18:00","culto":"CULTO DE ADORAÇÃO","dirigente":"Pr. Moisés","grupos":["S&H (SALMOS E HINOS)","LEVITAS DO SENHOR","REDENÇÃO"]},{"data":"25","dia":"Terça","hora":"19:30","culto":"CULTO DE ORAÇÃO","dirigente":"","grupos":["S&H (SALMOS E HINOS)","REDENÇÃO"]},{"data":"27","dia":"Quinta","hora":"19:30","culto":"DOUTRINA E ASSEMBLEIA DE MEMBROS","dirigente":"","grupos":["S&H (SALMOS E HINOS)"]},{"data":"29","dia":"Sábado","hora":"19:30","culto":"CULTO DA JUVENTUDE -","dirigente":"","grupos":["ÁTRIOS DE LOUVOR"]},{"data":"30","dia":"Domingo","hora":"9:00","culto":"EBD","dirigente":"Pb. Demétrio","grupos":["S&H (SALMOS E HINOS)","ÁTRIOS DE LOUVOR"]},{"data":"30","dia":"Domingo","hora":"18:00","culto":"CULTO DE ADORAÇÃO","dirigente":"Pr. Moisés","grupos":["S&H (SALMOS E HINOS)","THIAGO E GABRIELLY LEMOS","ÁTRIOS DE LOUVOR"]}];
 var CULTOS_PROX=[];
@@ -392,6 +428,133 @@ iniciarRealizados();
     try{if(window._avisoId)localStorage.setItem("dml-aviso-id",window._avisoId);}catch(e){}
   };
 })();
+var _RP={state:"login",slug:null,nome:null,cultoKey:null,cfg:null,fsDoc:null};
+var _RP_PROJ="escala-dml",_RP_KEY="AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc";
+var _RP_CFG_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/rider-config.json";
+function _rpSlug(n){return(n||"").toLowerCase().replace(/[àáâãä]/g,"a").replace(/[èéêë]/g,"e").replace(/[ìíîï]/g,"i").replace(/[òóôõö]/g,"o").replace(/[ùúûü]/g,"u").replace(/ç/g,"c").replace(/[^a-z0-9]/g,"_").replace(/_+/g,"_").replace(/^_|_$/g,"");}
+function _rpFsParse(v){if(!v)return null;if(v.stringValue!==undefined)return v.stringValue;if(v.integerValue!==undefined)return parseInt(v.integerValue);if(v.booleanValue!==undefined)return v.booleanValue;if(v.nullValue!==undefined)return null;if(v.arrayValue)return(v.arrayValue.values||[]).map(_rpFsParse);if(v.mapValue){var o={};Object.entries(v.mapValue.fields||{}).forEach(function(e){o[e[0]]=_rpFsParse(e[1]);});return o;}return null;}
+function _rpFsEnc(v){if(v===null||v===undefined)return{nullValue:null};if(typeof v==="boolean")return{booleanValue:v};if(typeof v==="number")return Number.isInteger(v)?{integerValue:String(v)}:{doubleValue:v};if(typeof v==="string")return{stringValue:v};if(Array.isArray(v))return{arrayValue:{values:v.map(_rpFsEnc)}};if(typeof v==="object"){var f={};Object.entries(v).forEach(function(e){f[e[0]]=_rpFsEnc(e[1]);});return{mapValue:{fields:f}};}return{stringValue:String(v)};}
+function abrirRiderPanel(){document.getElementById("rp-overlay").style.display="flex";_rpMostrarLogin();}
+function fecharRiderPanel(){document.getElementById("rp-overlay").style.display="none";}
+function _rpHtml(h){document.getElementById("rp-content").innerHTML=h;}
+function _rpMostrarLogin(){
+  _RP.state="login";
+  fetch(_RP_CFG_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(cfg){
+    _RP.cfg=cfg;
+    var grupos=cfg&&cfg.grupos?Object.values(cfg.grupos).filter(function(g){return g.pin;}).sort(function(a,b){return a.nome.localeCompare(b.nome);}):[];
+    if(!grupos.length){_rpHtml('<div class="rp-title">🎛 Acesso Líderes</div><p class="rp-sub">Nenhum grupo configurado pelo administrador ainda.</p>');return;}
+    var opts=grupos.map(function(g){return'<option value="'+_rpSlug(g.nome)+'">'+g.nome+'</option>';}).join("");
+    _rpHtml('<div class="rp-title">🎛 Acesso Líderes</div><p class="rp-sub">Selecione seu grupo e digite o PIN de acesso</p>'
+      +'<label class="rp-label">Grupo</label>'
+      +'<select class="rp-sel" id="rp-grupo">'+opts+'</select>'
+      +'<label class="rp-label">PIN</label>'
+      +'<input class="rp-inp" type="password" id="rp-pin" maxlength="6" placeholder="------" onkeydown="if(event.keyCode===13)_rpLogin()">'
+      +'<div class="rp-err" id="rp-err">PIN incorreto.</div>'
+      +'<button class="rp-btn" onclick="_rpLogin()">Entrar</button>');
+  }).catch(function(){_rpHtml('<p class="rp-err" style="display:block">Erro ao carregar configuração. Tente novamente.</p>');});
+}
+function _rpLogin(){
+  var slug=document.getElementById("rp-grupo").value;
+  var pin=document.getElementById("rp-pin").value;
+  var grupos=_RP.cfg&&_RP.cfg.grupos?_RP.cfg.grupos:{};
+  var grp=grupos[slug];
+  if(!grp||String(grp.pin)!==String(pin)){var e=document.getElementById("rp-err");if(e)e.style.display="block";return;}
+  _RP.slug=slug;_RP.nome=grp.nome;
+  _rpMostrarCultos();
+}
+function _rpMostrarCultos(){
+  _RP.state="cultos";
+  var todos=(CULTOS_ATUAL||[]).concat(CULTOS_PROX||[]);
+  var meus=todos.filter(function(c){return c.grupos&&c.grupos.indexOf(_RP.nome)>=0;});
+  meus.sort(function(a,b){return parseInt(a.data)-parseInt(b.data);});
+  var now=new Date();var mesAtualN=now.getMonth();var anoAtual=now.getFullYear();
+  function mesNumero(ml){var M={Janeiro:0,Fevereiro:1,"Março":2,Marco:2,Abril:3,Maio:4,Junho:5,Julho:6,Agosto:7,Setembro:8,Outubro:9,Novembro:10,Dezembro:11};var p=(ml||MES_ATUAL).split(" ");return{m:M[p[0]]!==undefined?M[p[0]]:mesAtualN,a:parseInt(p[1])||anoAtual};}
+  var items=meus.map(function(c){
+    var mesLabel=((CULTOS_PROX||[]).indexOf(c)>=0)?MES_PROX:MES_ATUAL;
+    var mn=mesNumero(mesLabel);
+    var dt=new Date(mn.a,mn.m,parseInt(c.data));
+    var key="d"+String(c.data).padStart(2,"0")+"_h"+c.hora.replace(":","");
+    var diff=Math.round((dt-new Date())/86400000);
+    var quando=diff<0?"Realizado":diff===0?"Hoje":diff===1?"Amanhã":"Em "+diff+" dias";
+    return'<div class="rp-culto-item" onclick="_rpAbrirEditor(\''+key+'\',\''+encodeURIComponent(c.culto+' — Dia '+c.data+' '+c.hora)+'\')">'
+      +'<div><div class="rp-culto-nome">'+c.culto+'</div><div class="rp-culto-sub">Dia '+c.data+' · '+c.hora+' · '+mesLabel+'</div></div>'
+      +'<span style="font-size:11px;color:#7a9aa8">'+quando+'</span></div>';
+  }).join("");
+  if(!items)items='<p style="font-size:13px;color:#7a9aa8">Nenhum culto encontrado para <strong>'+_RP.nome+'</strong> na escala publicada.</p>';
+  _rpHtml('<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+    +'<button style="background:none;border:none;color:#2ab482;font-size:18px;cursor:pointer" onclick="_rpMostrarLogin()">←</button>'
+    +'<div class="rp-title">'+_RP.nome+'</div></div>'
+    +'<p class="rp-sub">Selecione o culto para editar o rider</p>'
+    +items);
+}
+function _rpAbrirEditor(key,labelEnc){
+  _RP.cultoKey=key;_RP.cultoLabel=decodeURIComponent(labelEnc);
+  _rpHtml('<p class="rp-sub" style="margin-top:0">⏳ Carregando rider...</p>');
+  fetch("https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/riders/"+_RP.slug+"?key="+_RP_KEY)
+    .then(function(r){return r.ok?r.json():{};}).then(function(doc){
+      _RP.fsDoc=doc;
+      var cultos=doc.fields&&doc.fields.cultos?_rpFsParse(doc.fields.cultos):{};
+      var rd=cultos[key]||{};
+      var inp=rd.inputList||[{canal:"",instrumento:"",tipo:"",obs:""}];
+      var set=rd.setList||[{musica:"",solo:""}];
+      _rpRenderEditor(inp,set);
+    }).catch(function(){_rpRenderEditor([{canal:"",instrumento:"",tipo:"",obs:""}],[{musica:"",solo:""}]);});
+}
+function _rpRenderEditor(inp,set){
+  var inpRows=inp.map(function(r,i){
+    return'<tr>'
+      +'<td><input class="rp-cell" value="'+r.canal+'" placeholder="1" id="inp_canal_'+i+'"></td>'
+      +'<td><input class="rp-cell" value="'+r.instrumento+'" placeholder="Violão" id="inp_inst_'+i+'"></td>'
+      +'<td><input class="rp-cell" value="'+r.tipo+'" placeholder="DI" id="inp_tipo_'+i+'"></td>'
+      +'<td><input class="rp-cell" value="'+r.obs+'" placeholder="" id="inp_obs_'+i+'"></td>'
+      +'<td><button class="rp-rm" onclick="_rpRemInp('+i+')">✕</button></td></tr>';
+  }).join("");
+  var setRows=set.map(function(r,i){
+    return'<tr>'
+      +'<td><input class="rp-cell" value="'+r.musica+'" placeholder="Nome da música" id="set_mus_'+i+'" style="width:100%"></td>'
+      +'<td><input class="rp-cell" value="'+r.solo+'" placeholder="Solo (opcional)" id="set_sol_'+i+'"></td>'
+      +'<td><button class="rp-rm" onclick="_rpRemSet('+i+')">✕</button></td></tr>';
+  }).join("");
+  window._rpInpCount=inp.length;window._rpSetCount=set.length;
+  _rpHtml('<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+    +'<button style="background:none;border:none;color:#2ab482;font-size:18px;cursor:pointer" onclick="_rpMostrarCultos()">←</button>'
+    +'<div class="rp-title">🎛 Rider: '+_RP.cultoLabel+'</div></div>'
+    +'<p class="rp-sub">Input List + Set List — '+_RP.nome+'</p>'
+    +'<div class="rp-sec">🎚 Input List</div>'
+    +'<table class="rp-tbl"><thead><tr><th>Canal</th><th>Instrumento</th><th>Tipo/Mic</th><th>Obs</th><th></th></tr></thead><tbody id="rp-inp-body">'+inpRows+'</tbody></table>'
+    +'<button class="rp-add" onclick="_rpAddInp()">+ Adicionar canal</button>'
+    +'<div class="rp-sec">🎵 Set List</div>'
+    +'<table class="rp-tbl"><thead><tr><th style="width:55%">Música</th><th>Solo</th><th></th></tr></thead><tbody id="rp-set-body">'+setRows+'</tbody></table>'
+    +'<button class="rp-add" onclick="_rpAddSet()">+ Adicionar música</button>'
+    +'<button class="rp-btn" onclick="_rpSalvar()">💾 Salvar rider</button>'
+    +'<button class="rp-btn-out" onclick="_rpCompartilhar()" style="width:100%;margin-top:6px">📤 Compartilhar no WhatsApp</button>');
+}
+function _rpColeta(){
+  var inp=[];for(var i=0;i<window._rpInpCount;i++){var c=document.getElementById("inp_canal_"+i),inst=document.getElementById("inp_inst_"+i),t=document.getElementById("inp_tipo_"+i),o=document.getElementById("inp_obs_"+i);if(c)inp.push({canal:c.value,instrumento:inst?inst.value:"",tipo:t?t.value:"",obs:o?o.value:""});}
+  var set=[];for(var j=0;j<window._rpSetCount;j++){var m=document.getElementById("set_mus_"+j),s=document.getElementById("set_sol_"+j);if(m)set.push({musica:m.value,solo:s?s.value:""});}
+  return{inputList:inp.filter(function(r){return r.canal||r.instrumento;}),setList:set.filter(function(r){return r.musica;})};
+}
+function _rpRemInp(i){var d=_rpColeta();d.inputList.splice(i,1);if(!d.inputList.length)d.inputList=[{canal:"",instrumento:"",tipo:"",obs:""}];_rpRenderEditor(d.inputList,d.setList);}
+function _rpRemSet(i){var d=_rpColeta();d.setList.splice(i,1);if(!d.setList.length)d.setList=[{musica:"",solo:""}];_rpRenderEditor(d.inputList,d.setList);}
+function _rpAddInp(){var d=_rpColeta();d.inputList.push({canal:"",instrumento:"",tipo:"",obs:""});_rpRenderEditor(d.inputList,d.setList);}
+function _rpAddSet(){var d=_rpColeta();d.setList.push({musica:"",solo:""});_rpRenderEditor(d.inputList,d.setList);}
+function _rpSalvar(){
+  var d=_rpColeta();
+  var doc=_RP.fsDoc||{};
+  var cultos=doc.fields&&doc.fields.cultos?_rpFsParse(doc.fields.cultos):{};
+  cultos[_RP.cultoKey]={inputList:d.inputList,setList:d.setList,updatedAt:Date.now()};
+  var body={fields:{cultos:_rpFsEnc(cultos)}};
+  var url="https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/riders/"+_RP.slug+"?key="+_RP_KEY;
+  fetch(url,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
+    .then(function(r){if(r.ok){_RP.fsDoc=Object.assign({},_RP.fsDoc,{fields:{cultos:_rpFsEnc(cultos)}});alert("✅ Rider salvo com sucesso!");}else{return r.text().then(function(t){alert("Erro ao salvar: "+t);});}}).catch(function(e){alert("Erro: "+e.message);});
+}
+function _rpCompartilhar(){
+  var d=_rpColeta();
+  var txt="🎛 *Rider Técnico — "+_RP.nome+"*\n📅 "+_RP.cultoLabel+"\n\n";
+  if(d.inputList.length){txt+="🎚 *INPUT LIST*\n";d.inputList.forEach(function(r,i){txt+=(i+1)+". Canal "+r.canal+" — "+r.instrumento+(r.tipo?" ("+r.tipo+")":"")+(r.obs?" ["+r.obs+"]":"")+"\n";});}
+  if(d.setList.length){txt+="\n🎵 *SET LIST*\n";d.setList.forEach(function(r,i){txt+=(i+1)+". "+r.musica+(r.solo?" — Solo: "+r.solo:"")+"\n";});}
+  window.open("https://wa.me/?text="+encodeURIComponent(txt),"_blank");
+}
 </script>
 </body>
 </html>
