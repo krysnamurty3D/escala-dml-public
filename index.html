@@ -546,7 +546,7 @@ function _rpLogin(){
   var grp=grupos[slug];
   if(!grp||String(grp.pin)!==String(pin)){var e=document.getElementById("rp-err");if(e)e.style.display="block";return;}
   _RP.slug=slug;_RP.nome=grp.nome;
-  if(_RP.flow==="solic")_rpMostrarSolicMenu();else if(_RP.flow==="estudio")_rpMostrarCultosEstudio();else _rpMostrarCultos();
+  if(_RP.flow==="solic")_rpMostrarSolicMenu();else if(_RP.flow==="estudio")_rpMostrarEnsaio();else _rpMostrarCultos();
 }
 function _rpMostrarSolicMenu(){
   _RP.state="solic-menu";
@@ -624,46 +624,48 @@ function _rpMostrarCultos(){
   if(!items)items='<p style="font-size:13px;color:#7a9aa8;padding:12px 0">Nenhum culto encontrado para '+_RP.nome+' na escala publicada.</p>';
   _rpHtml(_rpHdr("_rpMostrarLogin")+'<p class="rp-sub" style="margin-top:4px">Selecione o culto</p>'+items);
 }
-function _rpMostrarCultosEstudio(){
-  _RP.state="cultos-estudio";_RP.cultoKey=null;_RP.cultoLabel=null;
-  var todos=(CULTOS_ATUAL||[]).concat(CULTOS_PROX||[]);
-  var meus=todos.filter(function(c){return c.grupos&&c.grupos.indexOf(_RP.nome)>=0;});
-  meus.sort(function(a,b){return parseInt(a.data)-parseInt(b.data);});
-  var M={Janeiro:0,Fevereiro:1,"Março":2,Marco:2,Abril:3,Maio:4,Junho:5,Julho:6,Agosto:7,Setembro:8,Outubro:9,Novembro:10,Dezembro:11};
-  var hoje=new Date();
-  var items=meus.map(function(c){
-    var ml=((CULTOS_PROX||[]).indexOf(c)>=0)?MES_PROX:MES_ATUAL;
-    var p=(ml||"").split(" ");var mo=M[p[0]]!==undefined?M[p[0]]:hoje.getMonth();var an=parseInt(p[1])||hoje.getFullYear();
-    var dt=new Date(an,mo,parseInt(c.data));
-    var diff=Math.round((dt-hoje)/86400000);
-    var quando=diff<0?"Realizado":diff===0?"Hoje":diff===1?"Amanhã":"Em "+diff+" dias";
-    var key="d"+String(c.data).padStart(2,"0")+"_h"+c.hora.replace(":","");
-    var lbl=c.culto+" · Dia "+c.data+" · "+c.hora;
-    return'<div class="rp-culto-item" onclick="_rpAbrirEstudio(\''+key+'\',\''+encodeURIComponent(lbl)+'\')">'
-      +'<div><div class="rp-culto-nome">'+c.culto+'</div><div class="rp-culto-sub">Dia '+c.data+' · '+c.hora+' · '+ml+'</div></div>'
-      +'<span style="font-size:11px;color:#7a9aa8;white-space:nowrap">'+quando+'</span></div>';
-  }).join("");
-  if(!items)items='<p style="font-size:13px;color:#7a9aa8;padding:12px 0">Nenhum culto encontrado para '+_RP.nome+' na escala publicada.</p>';
-  _rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub" style="margin-top:4px">Selecione o culto</p>'+items);
-}
-function _rpAbrirEstudio(key,labelEnc){
-  _RP.cultoKey=key;_RP.cultoLabel=decodeURIComponent(labelEnc);
-  _rpHtml(_rpHdr("_rpMostrarCultosEstudio")+"<p class=\"rp-sub\"><i class=ph-hourglass></i> Carregando...</p>");
+function _rpEnsaioYmd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function _rpMostrarEnsaio(){
+  _RP.state="ensaio";
+  var grp=(_RP.cfg&&_RP.cfg.grupos)?_RP.cfg.grupos[_RP.slug]:null;
+  var dia=grp?grp.ensaioDia:null;
+  if(dia===undefined||dia===null||dia===""){
+    _rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub" style="margin-top:4px">Nenhum dia de ensaio configurado para esse grupo. Fale com o coordenador.</p>');
+    return;
+  }
+  var hora=grp.ensaioHora||"19:30";
+  var DIAS=["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+  var hoje=new Date();hoje.setHours(0,0,0,0);
+  var diffAtras=(hoje.getDay()-parseInt(dia)+7)%7;
+  var dataCiclo=new Date(hoje);dataCiclo.setDate(dataCiclo.getDate()-diffAtras);
+  _RP.ensaioDataCiclo=dataCiclo;
+  _RP.ensaioKey=_rpEnsaioYmd(dataCiclo);_RP.ensaioDiaLbl=DIAS[dataCiclo.getDay()];_RP.ensaioHora=hora;
+  _rpHtml(_rpHdr("_rpMostrarHome")+"<p class=\"rp-sub\"><i class=ph-hourglass></i> Carregando...</p>");
   var pDoc=fetch("https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/estudio/"+_RP.slug+"?key="+_RP_KEY).then(function(r){return r.ok?r.json():{};});
   var pCfg=fetch(_RP_CHECKLIST_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():{itens:[]};}).catch(function(){return{itens:[]};});
   Promise.all([pDoc,pCfg]).then(function(res){
     _RP.estudioDoc=res[0];_RP.checklistItens=res[1].itens||[];
-    var cultos=res[0].fields&&res[0].fields.cultos?_rpFsParse(res[0].fields.cultos):{};
-    _RP.estudioAtual=cultos[key]||{};
+    var ensaios=res[0].fields&&res[0].fields.ensaios?_rpFsParse(res[0].fields.ensaios):{};
+    _RP.estudioAtual=ensaios[_RP.ensaioKey]||{};
     _rpRenderEstudio();
-  }).catch(function(){_rpHtml(_rpHdr("_rpMostrarCultosEstudio")+'<p class="rp-sub">Erro ao carregar.</p>');});
+  }).catch(function(){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub">Erro ao carregar.</p>');});
 }
 function _rpRenderEstudio(){
   var rd=_RP.estudioAtual||{};
   var check=rd.checklist||{};
   var ent=rd.entrada?new Date(rd.entrada).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):null;
   var sai=rd.saida?new Date(rd.saida).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):null;
-  var h=_rpHdr("_rpMostrarCultosEstudio");
+  var h=_rpHdr("_rpMostrarHome");
+  h+='<p class="rp-sub" style="margin-top:4px">Ensaio: '+_RP.ensaioDiaLbl+' '+_RP.ensaioHora+'</p>';
+  if(rd.semEnsaio){
+    h+='<p class="rp-sub" style="color:#7a9aa8">Sem ensaio avisado para essa data.</p>';
+    h+='<button class="rp-btn-out" onclick="_rpMarcarSemEnsaio(false,0)">Desfazer aviso</button>';
+    _rpHtml(h);return;
+  }
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">'
+    +'<button class="rp-btn-out" onclick="_rpMarcarSemEnsaio(true,0)">❌ Sem ensaio nesta data</button>'
+    +'<button class="rp-btn-out" onclick="_rpMarcarSemEnsaio(true,1)">📅 Avisar semana que vem</button>'
+    +'</div>';
   h+='<div class="rp-sec">🕐 Horário</div>';
   h+='<div class="rp-horario-row">'
     +'<button class="rp-horario-btn'+(ent?" batido":"")+'" onclick="_rpBaterHorario(\'entrada\')">Entrada<span class="rp-horario-hora">'+(ent||"—")+'</span></button>'
@@ -673,9 +675,8 @@ function _rpRenderEstudio(){
   if(!_RP.checklistItens.length){h+='<p class="rp-sub">Nenhum item configurado ainda.</p>';}
   else{
     h+=_RP.checklistItens.map(function(it){
-      var st=check[it]||"pendente";
-      function btn(v,ico){return'<button class="rp-check-btn'+(st===v?" ativo-"+v:"")+'" onclick="_rpSetCheck(\''+encodeURIComponent(it)+'\',\''+v+'\')">'+ico+'</button>';}
-      return'<div class="rp-check-row"><div class="rp-check-nome">'+it+'</div><div class="rp-check-opts">'+btn("ok","✅")+btn("pendente","➖")+btn("problema","⚠️")+'</div></div>';
+      var marcado=!!check[it];
+      return '<label class="rp-check-row" style="cursor:pointer"><span class="rp-check-nome">'+it+'</span><input type="checkbox" style="width:20px;height:20px;accent-color:#2ab482" '+(marcado?"checked":"")+' onchange="_rpSetCheck(\''+encodeURIComponent(it)+'\',this.checked)"></label>';
     }).join("");
   }
   h+='<label class="rp-obs-lbl" style="margin-top:12px;display:block">Observações</label>';
@@ -683,44 +684,54 @@ function _rpRenderEstudio(){
   h+='<button class="rp-btn" style="margin-top:14px" onclick="_rpSalvarEstudio()">💾 Salvar checklist</button>';
   _rpHtml(h);
 }
-function _rpSetCheck(itemEnc,valor){
+function _rpSetCheck(itemEnc,marcado){
   var item=decodeURIComponent(itemEnc);
   if(!_RP.estudioAtual)_RP.estudioAtual={};
   if(!_RP.estudioAtual.checklist)_RP.estudioAtual.checklist={};
-  _RP.estudioAtual.checklist[item]=valor;
-  _rpRenderEstudio();
+  _RP.estudioAtual.checklist[item]=!!marcado;
+}
+function _rpEnsaiosDoc(){
+  var doc=_RP.estudioDoc||{};
+  return doc.fields&&doc.fields.ensaios?_rpFsParse(doc.fields.ensaios):{};
+}
+function _rpSalvarEnsaiosDoc(ensaios){
+  var body={fields:{ensaios:_rpFsEnc(ensaios)}};
+  var url="https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/estudio/"+_RP.slug+"?key="+_RP_KEY;
+  return fetch(url,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){
+    if(r.ok){_RP.estudioDoc=Object.assign({},_RP.estudioDoc,{fields:{ensaios:_rpFsEnc(ensaios)}});return true;}
+    return r.text().then(function(t){alert("Erro: "+t);return false;});
+  }).catch(function(e){alert("Erro: "+e.message);return false;});
 }
 function _rpBaterHorario(tipo){
   var campo=tipo==="entrada"?"entrada":"saida";
   var ts=Date.now();
-  var doc=_RP.estudioDoc||{};
-  var cultos=doc.fields&&doc.fields.cultos?_rpFsParse(doc.fields.cultos):{};
-  var rd=cultos[_RP.cultoKey]||{};
+  var ensaios=_rpEnsaiosDoc();
+  var rd=ensaios[_RP.ensaioKey]||{};
   rd[campo]=ts;
-  cultos[_RP.cultoKey]=rd;
-  var body={fields:{cultos:_rpFsEnc(cultos)}};
-  var url="https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/estudio/"+_RP.slug+"?key="+_RP_KEY;
-  fetch(url,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
-    .then(function(r){
-      if(r.ok){_RP.estudioDoc=Object.assign({},_RP.estudioDoc,{fields:{cultos:_rpFsEnc(cultos)}});_RP.estudioAtual=rd;_rpRenderEstudio();}
-      else{return r.text().then(function(t){alert("Erro ao registrar: "+t);});}
-    }).catch(function(e){alert("Erro: "+e.message);});
+  ensaios[_RP.ensaioKey]=rd;
+  _rpSalvarEnsaiosDoc(ensaios).then(function(ok){if(ok){_RP.estudioAtual=rd;_rpRenderEstudio();}});
+}
+function _rpMarcarSemEnsaio(valor,semanas){
+  var alvo=new Date(_RP.ensaioDataCiclo);alvo.setDate(alvo.getDate()+(semanas||0)*7);
+  var key=_rpEnsaioYmd(alvo);
+  var ensaios=_rpEnsaiosDoc();
+  var rd=ensaios[key]||{};
+  rd.semEnsaio=!!valor;
+  ensaios[key]=rd;
+  _rpSalvarEnsaiosDoc(ensaios).then(function(ok){
+    if(!ok)return;
+    if(!semanas){_RP.estudioAtual=rd;_rpRenderEstudio();}
+    else{alert(valor?"✅ Aviso registrado para semana que vem.":"Aviso desfeito.");}
+  });
 }
 function _rpSalvarEstudio(){
   var obs=document.getElementById("estudio-obs").value;
-  var doc=_RP.estudioDoc||{};
-  var cultos=doc.fields&&doc.fields.cultos?_rpFsParse(doc.fields.cultos):{};
-  var rd=cultos[_RP.cultoKey]||{};
+  var ensaios=_rpEnsaiosDoc();
+  var rd=ensaios[_RP.ensaioKey]||{};
   rd.checklist=(_RP.estudioAtual&&_RP.estudioAtual.checklist)||{};
   rd.obsChecklist=obs;
-  cultos[_RP.cultoKey]=rd;
-  var body={fields:{cultos:_rpFsEnc(cultos)}};
-  var url="https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/estudio/"+_RP.slug+"?key="+_RP_KEY;
-  fetch(url,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
-    .then(function(r){
-      if(r.ok){_RP.estudioDoc=Object.assign({},_RP.estudioDoc,{fields:{cultos:_rpFsEnc(cultos)}});alert("✅ Checklist salvo!");}
-      else{return r.text().then(function(t){alert("Erro ao salvar: "+t);});}
-    }).catch(function(e){alert("Erro: "+e.message);});
+  ensaios[_RP.ensaioKey]=rd;
+  _rpSalvarEnsaiosDoc(ensaios).then(function(ok){if(ok)alert("✅ Checklist salvo!");});
 }
 function _rpAbrirEditor(key,labelEnc){
   _RP.cultoKey=key;_RP.cultoLabel=decodeURIComponent(labelEnc);
