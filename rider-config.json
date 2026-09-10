@@ -1,5 +1,13 @@
 {
   "grupos": {
+    "semearte": {
+      "nome": "SEMEARTE",
+      "pin": ""
+    },
+    "kyrios": {
+      "nome": "KYRIOS",
+      "pin": ""
+    },
     "adonai": {
       "nome": "ADONAI",
       "pin": "2177"
@@ -28,46 +36,6 @@
       "nome": "REDENÇÃO",
       "pin": "4268"
     },
-    "coral_robert_kalley": {
-      "nome": "CORAL ROBERT KALLEY",
-      "pin": "7352"
-    },
-    "coral_cancao_de_paz": {
-      "nome": "CORAL CANÇÃO DE PAZ",
-      "pin": ""
-    },
-    "coral_crescendo_em_cristo": {
-      "nome": "CORAL CRESCENDO EM CRISTO",
-      "pin": ""
-    },
-    "semearte": {
-      "nome": "SEMEARTE",
-      "pin": ""
-    },
-    "kyrios": {
-      "nome": "KYRIOS",
-      "pin": ""
-    },
-    "quarteto_kerigma": {
-      "nome": "QUARTETO KERIGMA",
-      "pin": ""
-    },
-    "levitas_do_senhor": {
-      "nome": "LEVITAS DO SENHOR",
-      "pin": ""
-    },
-    "adoradoras_do_rei": {
-      "nome": "ADORADORAS DO REI",
-      "pin": ""
-    },
-    "chama_ardente": {
-      "nome": "CHAMA ARDENTE",
-      "pin": ""
-    },
-    "bandinha_de_casais": {
-      "nome": "BANDINHA DE CASAIS",
-      "pin": ""
-    },
     "thiago_e_gabrielly_lemos": {
       "nome": "THIAGO E GABRIELLY LEMOS",
       "pin": ""
@@ -95,6 +63,55 @@
     "daniel_e_jane": {
       "nome": "DANIEL E JANE",
       "pin": ""
+    },
+    "programacao_exclusiva_da_men": {
+      "nome": "PROGRAMAÇÃO EXCLUSIVA DA MEN",
+      "pin": ""
+    },
+    "programacao_exclusiva_da_uhc": {
+      "nome": "PROGRAMAÇÃO EXCLUSIVA DA UHC",
+      "pin": ""
+    },
+    "panda": {
+      "nome": "PANDA",
+      "pin": ""
+    },
+    "quarteto_kerigma": {
+      "nome": "QUARTETO KERIGMA",
+      "pin": ""
+    },
+    "levitas_do_senhor": {
+      "nome": "LEVITAS DO SENHOR",
+      "pin": ""
+    },
+    "adoradoras_do_rei": {
+      "nome": "ADORADORAS DO REI",
+      "pin": ""
+    },
+    "chama_ardente": {
+      "nome": "CHAMA ARDENTE",
+      "pin": ""
+    },
+    "bandinha_de_casais": {
+      "nome": "BANDINHA DE CASAIS",
+      "pin": ""
+    },
+    "coral_robert_kalley": {
+      "nome": "CORAL ROBERT KALLEY",
+      "pin": "7352"
+    },
+    "coral_cancao_de_paz": {
+      "nome": "CORAL CANÇÃO DE PAZ",
+      "pin": ""
+    },
+    "coral_crescendo_em_cristo": {
+      "nome": "CORAL CRESCENDO EM CRISTO",
+      "pin": ""
     }
+  },
+  "contatos": {
+    "tecnico": "",
+    "midia": "",
+    "surdos": ""
   }
 }
