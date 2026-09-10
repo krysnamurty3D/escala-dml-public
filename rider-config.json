@@ -1,5 +1,25 @@
 {
   "grupos": {
+    "semearte": {
+      "nome": "SEMEARTE",
+      "pin": ""
+    },
+    "kyrios": {
+      "nome": "KYRIOS",
+      "pin": ""
+    },
+    "coral_robert_kalley": {
+      "nome": "CORAL ROBERT KALLEY",
+      "pin": "1111"
+    },
+    "coral_cancao_de_paz": {
+      "nome": "CORAL CANÇÃO DE PAZ",
+      "pin": ""
+    },
+    "coral_crescendo_em_cristo": {
+      "nome": "CORAL CRESCENDO EM CRISTO",
+      "pin": ""
+    },
     "quarteto_kerigma": {
       "nome": "QUARTETO KERIGMA",
       "pin": ""
@@ -18,54 +38,6 @@
     },
     "bandinha_de_casais": {
       "nome": "BANDINHA DE CASAIS",
-      "pin": ""
-    },
-    "semearte": {
-      "nome": "SEMEARTE",
-      "pin": ""
-    },
-    "kyrios": {
-      "nome": "KYRIOS",
-      "pin": ""
-    },
-    "adonai": {
-      "nome": "ADONAI",
-      "pin": "2177"
-    },
-    "adorare": {
-      "nome": "ADORARE",
-      "pin": "4754"
-    },
-    "atrios_de_louvor": {
-      "nome": "ÁTRIOS DE LOUVOR",
-      "pin": "2312"
-    },
-    "canto_novo": {
-      "nome": "CANTO NOVO",
-      "pin": "5425"
-    },
-    "comunhao": {
-      "nome": "COMUNHÃO",
-      "pin": "4983"
-    },
-    "louvor_congregacional": {
-      "nome": "LOUVOR CONGREGACIONAL",
-      "pin": "4945"
-    },
-    "redencao": {
-      "nome": "REDENÇÃO",
-      "pin": "4268"
-    },
-    "coral_robert_kalley": {
-      "nome": "CORAL ROBERT KALLEY",
-      "pin": "1111"
-    },
-    "coral_cancao_de_paz": {
-      "nome": "CORAL CANÇÃO DE PAZ",
-      "pin": ""
-    },
-    "coral_crescendo_em_cristo": {
-      "nome": "CORAL CRESCENDO EM CRISTO",
       "pin": ""
     },
     "thiago_e_gabrielly_lemos": {
@@ -107,6 +79,34 @@
     "panda": {
       "nome": "PANDA",
       "pin": ""
+    },
+    "adonai": {
+      "nome": "ADONAI",
+      "pin": "2177"
+    },
+    "adorare": {
+      "nome": "ADORARE",
+      "pin": "4754"
+    },
+    "atrios_de_louvor": {
+      "nome": "ÁTRIOS DE LOUVOR",
+      "pin": "2312"
+    },
+    "canto_novo": {
+      "nome": "CANTO NOVO",
+      "pin": "5425"
+    },
+    "comunhao": {
+      "nome": "COMUNHÃO",
+      "pin": "4983"
+    },
+    "louvor_congregacional": {
+      "nome": "LOUVOR CONGREGACIONAL",
+      "pin": "4945"
+    },
+    "redencao": {
+      "nome": "REDENÇÃO",
+      "pin": "4268"
     }
   },
   "contatos": {
