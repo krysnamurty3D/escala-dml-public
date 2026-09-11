@@ -13,6 +13,8 @@
 <meta name="twitter:description" content="Confira a escala de louvor — Setembro 2026.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -172,6 +174,8 @@ body.light .aguardando-titulo{color:#4a6070;}body.light .aguardando-sub{color:#7
 .rp-btn-out{background:rgba(42,180,130,.1);color:#2ab482;border:1px solid #2ab482;border-radius:9px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .rp-btn-out:hover{background:rgba(42,180,130,.2);}
 .rp-err{font-size:12px;color:#e06060;margin-bottom:10px;}
+.rp-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(42,180,130,.12);border:1px solid #2ab482;color:#2ab482;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:600;}
+.rp-chip a{cursor:pointer;color:#2ab482;font-weight:800;}
 .rp-culto-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#162030;border:1px solid #2a3a4a;border-radius:9px;margin-bottom:8px;cursor:pointer;}
 .rp-culto-item:hover{border-color:#2ab482;}
 .rp-culto-nome{font-size:13px;font-weight:700;color:#edf4f4;}
@@ -251,7 +255,7 @@ body.light .rp-check-btn,body.light .rp-horario-btn{background:#e8f0f8;border-co
 <div class="aguardando-escala"><div class="aguardando-icone"><i class=ph-clipboard-text></i></div><div class="aguardando-titulo">Aguardando escala</div><div class="aguardando-sub">A escala de Outubro 2026 ainda não foi definida.</div></div>
 </main>
 <div class="realizados-sec" id="realizados-sec"><button class="realizados-toggle" id="realizados-toggle" onclick="toggleRealizados()"><span><i class=ph-file-text></i> Cultos realizados (<span id="realizados-count">0</span>)</span><span class="arrow">▾</span></button><div class="realizados-body" id="realizados-body" style="display:none"></div></div>
-<div class="updated">Atualizado em 10 de setembro de 2026</div>
+<div class="updated">Atualizado em 11 de setembro de 2026</div>
 <footer><strong>Departamento de Música e Louvor</strong>Igreja Evangélica Congregacional Central</footer>
 <div id="rp-overlay" class="rp-overlay" style="display:none" onclick="if(event.target===this)fecharRiderPanel()"><div class="rp-panel" id="rp-panel"><button class="rp-close" onclick="fecharRiderPanel()">✕</button><div id="rp-content"></div></div></div>
 <script>
@@ -262,6 +266,7 @@ var MES_PROX="Outubro 2026";
 var CULTOS=CULTOS_ATUAL;
 var MES=MES_ATUAL;
 var CORES={"S&H (SALMOS E HINOS)":"#9a7800","RIVAILDA":"#c03030","PANDA":"#c03030","CORAL ROBERT KALLEY":"#1a5fa0","REDENÇÃO":"#1a7a40","CORAL CANÇÃO DE PAZ":"#1a5fa0","BANDINHA DE CASAIS":"#6a3ab8","PROGRAMAÇÃO EXCLUSIVA DA MEN":"#c03030","ADORADORAS DO REI":"#6a3ab8","LEVITAS DO SENHOR":"#6a3ab8","QUARTETO KERIGMA":"#6a3ab8","ÁTRIOS DE LOUVOR":"#1a7a40","PROGRAMAÇÃO EXCLUSIVA DA UHC":"#c03030","CHAMA ARDENTE":"#6a3ab8","CANTO NOVO":"#1a7a40","SEMEARTE":"#c06018","KYRIOS":"#c06018","DANIEL E JANE":"#c03030"};
+var _RP_GRUPOS_LOUVOR=["ADONAI","ADORARE","ÁTRIOS DE LOUVOR","CANTO NOVO","COMUNHÃO","LOUVOR CONGREGACIONAL","REDENÇÃO"];
 var MESES={Janeiro:0,Fevereiro:1,"Março":2,Marco:2,Abril:3,Maio:4,Junho:5,Julho:6,Agosto:7,Setembro:8,Outubro:9,Novembro:10,Dezembro:11};
 var filtroAtivo="todos";
 function lg(g){return g==="S&H (SALMOS E HINOS)"?"S&H":g.replace(/^CORAL\s+/,"C. ");}
@@ -489,6 +494,7 @@ var _RP={state:"login",flow:null,slug:null,nome:null,cultoKey:null,cultoLabel:nu
 var _RP_PROJ="escala-dml",_RP_KEY="AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc";
 var _RP_CFG_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/rider-config.json";
 var _RP_CHECKLIST_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/checklist-config.json";
+var _RP_INSTRUMENTOS_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/instrumentos-config.json";
 var _RP_INSTRS=["BATERIA","BAIXO","CAJON","GUITARRA","PIANO","TECLADO","VIOLÃO","VS"];
 function _rpSlug(n){return(n||"").toLowerCase().replace(/[àáâãä]/g,"a").replace(/[èéêë]/g,"e").replace(/[ìíîï]/g,"i").replace(/[òóôõö]/g,"o").replace(/[ùúûü]/g,"u").replace(/ç/g,"c").replace(/[^a-z0-9]/g,"_").replace(/_+/g,"_").replace(/^_|_$/g,"");}
 function _rpFsParse(v){if(!v)return null;if(v.stringValue!==undefined)return v.stringValue;if(v.integerValue!==undefined)return parseInt(v.integerValue);if(v.booleanValue!==undefined)return v.booleanValue;if(v.nullValue!==undefined)return null;if(v.arrayValue)return(v.arrayValue.values||[]).map(_rpFsParse);if(v.mapValue){var o={};Object.entries(v.mapValue.fields||{}).forEach(function(e){o[e[0]]=_rpFsParse(e[1]);});return o;}return null;}
@@ -498,11 +504,35 @@ function abrirHomeApp(){document.getElementById("rp-overlay").style.display="fle
 function fecharRiderPanel(){document.getElementById("rp-overlay").style.display="none";}
 function _rpHtml(h){document.getElementById("rp-content").innerHTML=h;}
 function _rpInstrOpts(sel){return _RP_INSTRS.map(function(x){return'<option value="'+x+'"'+(x===sel?' selected':'')+'>'+x+'</option>';}).join("");}
+var _rpFbApp=null,_rpMessaging=null;
+try{
+  _rpFbApp=firebase.initializeApp({apiKey:"AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc",authDomain:"escala-dml.firebaseapp.com",projectId:"escala-dml",storageBucket:"escala-dml.firebasestorage.app",messagingSenderId:"219409261265",appId:"1:219409261265:web:d919096c27487df65bdbf0"});
+  if(firebase.messaging.isSupported())_rpMessaging=firebase.messaging();
+}catch(e){console.warn("FCM indisponível:",e);}
+function _rpAtivarNotificacoes(){
+  if(!_rpMessaging){alert("Este navegador não suporta notificações push.");return;}
+  if(!_RP.slug){alert("Entre com o PIN do seu grupo antes de ativar as notificações.");return;}
+  navigator.serviceWorker.register("firebase-messaging-sw.js").then(function(reg){
+    return Notification.requestPermission().then(function(perm){
+      if(perm!=="granted"){alert("Permissão de notificação negada.");return;}
+      return _rpMessaging.getToken({vapidKey:"BMx6z1hCdW1bKwCjmTYrgi-igDclRR70d8RGs83ifh3XoGclMfKDQYOsw9ZifPwAq99dTpWhm8oBt_yZzH2H2CI",serviceWorkerRegistration:reg}).then(function(token){
+        if(!token)return;
+        var body={fields:{grupo:{stringValue:_RP.slug},grupoNome:{stringValue:_RP.nome||""},criadoEm:{integerValue:String(Date.now())}}};
+        var url="https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/pushTokens/"+encodeURIComponent(token)+"?key="+_RP_KEY;
+        return fetch(url,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){
+          if(r.ok){_RP.pushAtivo=true;alert("✅ Notificações ativadas para "+_RP.nome+"!");if(_RP.state==="ensaio"&&typeof _rpRenderEstudio==="function")_rpRenderEstudio();}
+          else alert("Erro ao salvar token de notificação.");
+        });
+      });
+    });
+  }).catch(function(e){alert("Erro: "+e.message);});
+}
 function _rpHdr(backFn){
   var b=backFn?'<button style="background:none;border:none;color:#2ab482;font-size:22px;cursor:pointer;padding:0;line-height:1;margin-right:10px" onclick="'+backFn+'()"><i class=ph-arrow-left></i></button>':"";
-  var tag=_RP.flow==="solic"?"<i class=ph-package></i> SOLICITAÇÃO DE EQUIPAMENTO":_RP.flow==="estudio"?"<i class=ph-list-checks></i> ESTÚDIO":"<i class=ph-sliders-horizontal></i> RIDER TÉCNICO";
+  var tag=_RP.flow==="solic"?"<i class=ph-package></i> SOLICITAÇÃO DE EQUIPAMENTO":_RP.flow==="estudio"?"<i class=ph-list-checks></i> ESTÚDIO":_RP.flow==="comunicacao"?"<i class=ph-megaphone></i> AGENDA EXTERNA":"<i class=ph-sliders-horizontal></i> RIDER TÉCNICO";
   var sub=_RP.cultoLabel?'<div class="rp-hdr-culto"><span class="rp-hdr-tag"><i class=ph-music-note></i></span> '+_RP.cultoLabel+'</div>':'<div class="rp-hdr-culto"><span class="rp-hdr-tag">'+tag+'</span></div>';
-  return'<div class="rp-hdr-box"><div style="display:flex;align-items:flex-start">'+b+'<div><div class="rp-hdr-grupo">'+(_RP.nome||"Acesso Líderes")+'</div>'+sub+'</div></div></div>';
+  var sino=_RP.slug?'<button style="background:none;border:none;color:#7a9aa8;font-size:19px;cursor:pointer;position:absolute;top:14px;right:16px" onclick="_rpAtivarNotificacoes()" title="Ativar notificações">'+(_RP.pushAtivo?"🔔":"🔕")+'</button>':"";
+  return'<div class="rp-hdr-box" style="position:relative">'+sino+'<div style="display:flex;align-items:flex-start">'+b+'<div><div class="rp-hdr-grupo">'+(_RP.nome||"Acesso Líderes")+'</div>'+sub+'</div></div></div>';
 }
 function _rpMostrarHome(){
   _RP.state="home";_RP.flow=null;
@@ -515,19 +545,21 @@ function _rpMostrarHome(){
     +'<div class="rp-home-card" onclick="_RP.flow=\'estudio\';_rpMostrarLogin()"><div class="rp-home-ico">📋</div><div class="rp-home-lbl">Estúdio</div></div>'
     +'</div>');
 }
+function _rpBtnAgendaExterna(){return'<button class="rp-btn-out" style="width:100%;margin-top:16px" onclick="_RP.flow=\'comunicacao\';_rpMostrarLogin()">📅 Avisar agenda externa do meu grupo</button>';}
 function _rpMostrarComunicacoes(){
   _RP.state="comunic";
   _rpHtml(_rpHdr("_rpMostrarHome")+"<p class=\"rp-sub\" style=\"margin-top:4px\">&#9203; Carregando avisos...</p>");
   fetch(AVISO_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
-    if(!d||!d.ativo||!d.mensagem){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub" style="margin-top:4px">Nenhum aviso no momento.</p>');return;}
-    _rpHtml(_rpHdr("_rpMostrarHome")+(d.titulo?'<div class="rp-title">'+d.titulo+'</div>':'')+'<div class="rp-sub" style="color:#c8d8e8;white-space:pre-wrap;margin-top:8px">'+d.mensagem+'</div>');
-  }).catch(function(){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub">Erro ao carregar aviso.</p>');});
+    if(!d||!d.ativo||!d.mensagem){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub" style="margin-top:4px">Nenhum aviso no momento.</p>'+_rpBtnAgendaExterna());return;}
+    _rpHtml(_rpHdr("_rpMostrarHome")+(d.titulo?'<div class="rp-title">'+d.titulo+'</div>':'')+'<div class="rp-sub" style="color:#c8d8e8;white-space:pre-wrap;margin-top:8px">'+d.mensagem+'</div>'+_rpBtnAgendaExterna());
+  }).catch(function(){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub">Erro ao carregar aviso.</p>'+_rpBtnAgendaExterna());});
 }
 function _rpMostrarLogin(){
   _RP.state="login";_RP.nome=null;_RP.cultoKey=null;_RP.cultoLabel=null;
   fetch(_RP_CFG_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(cfg){
     _RP.cfg=cfg;
     var grupos=cfg&&cfg.grupos?Object.values(cfg.grupos).filter(function(g){return g.pin;}).sort(function(a,b){return a.nome.localeCompare(b.nome);}):[];
+    if(_RP.flow==="estudio")grupos=grupos.filter(function(g){return _RP_GRUPOS_LOUVOR.indexOf(g.nome)>=0;});
     if(!grupos.length){_rpHtml(_rpHdr("_rpMostrarHome")+"<p class=\"rp-sub\">Nenhum grupo configurado ainda.</p>");return;}
     var opts=grupos.map(function(g){return'<option value="'+_rpSlug(g.nome)+'">'+g.nome+'</option>';}).join("");
     _rpHtml(_rpHdr("_rpMostrarHome")
@@ -546,7 +578,35 @@ function _rpLogin(){
   var grp=grupos[slug];
   if(!grp||String(grp.pin)!==String(pin)){var e=document.getElementById("rp-err");if(e)e.style.display="block";return;}
   _RP.slug=slug;_RP.nome=grp.nome;
-  if(_RP.flow==="solic")_rpMostrarSolicMenu();else if(_RP.flow==="estudio")_rpMostrarEnsaio();else _rpMostrarCultos();
+  if(_RP.flow==="solic")_rpMostrarSolicMenu();else if(_RP.flow==="estudio")_rpMostrarEnsaio();else if(_RP.flow==="comunicacao")_rpMostrarAgendaExterna();else _rpMostrarCultos();
+}
+function _rpMostrarAgendaExterna(){
+  _RP.state="agenda-externa";
+  var hoje=new Date().toISOString().slice(0,10);
+  _rpHtml(_rpHdr("_rpMostrarComunicacoes")
+    +'<p class="rp-sub" style="margin-top:4px">Avise um compromisso extra igreja de '+_RP.nome+'</p>'
+    +'<label class="rp-label" style="margin-top:2px">Dia</label>'
+    +'<input class="rp-inp" type="date" id="agenda-dia" min="'+hoje+'">'
+    +'<label class="rp-label">Horário</label>'
+    +'<input class="rp-inp" type="time" id="agenda-horario">'
+    +'<label class="rp-label">Local / Nome da Denominação</label>'
+    +'<input class="rp-inp" type="text" id="agenda-local" placeholder="Ex: Igreja Batista Central, Praça XV...">'
+    +'<div class="rp-err" id="agenda-err" style="display:none">Preencha dia, horário e local.</div>'
+    +'<button class="rp-btn" onclick="_rpEnviarAgendaExterna()">Enviar aviso</button>');
+}
+function _rpEnviarAgendaExterna(){
+  var dia=document.getElementById("agenda-dia").value;
+  var horario=document.getElementById("agenda-horario").value;
+  var local=document.getElementById("agenda-local").value.trim();
+  if(!dia||!horario||!local){var e=document.getElementById("agenda-err");if(e)e.style.display="block";return;}
+  var payload={grupo:_RP.slug,grupoNome:_RP.nome,dia:dia,horario:horario,local:local,criadoEm:Date.now()};
+  var fields={};Object.keys(payload).forEach(function(k){fields[k]=_rpFsEnc(payload[k]);});
+  var url="https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/agendaExterna?key="+_RP_KEY;
+  fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fields:fields})})
+    .then(function(r){
+      if(r.ok){alert("✅ Agenda enviada! Obrigado por avisar.");_rpMostrarComunicacoes();}
+      else{return r.text().then(function(t){alert("Erro ao enviar: "+t);});}
+    }).catch(function(e){alert("Erro: "+e.message);});
 }
 function _rpMostrarSolicMenu(){
   _RP.state="solic-menu";
@@ -557,7 +617,8 @@ function _rpMostrarSolicMenu(){
     .then(function(r){return r.ok?r.json():[];}).then(function(rows){
       var itens=(rows||[]).filter(function(r){return r.document;}).map(function(r){
         var f=r.document.fields||{};
-        return{id:r.document.name.split("/").pop(),grupoNome:_rpFsParse(f.grupoNome),item:_rpFsParse(f.item),motivo:_rpFsParse(f.motivo),data:_rpFsParse(f.data),status:_rpFsParse(f.status)||"pendente",justificativa:_rpFsParse(f.justificativa),criadoEm:_rpFsParse(f.criadoEm)||0};
+        var arrItens=f.itens?_rpFsParse(f.itens):(f.item?[_rpFsParse(f.item)]:[]);
+        return{id:r.document.name.split("/").pop(),grupoNome:_rpFsParse(f.grupoNome),itens:arrItens,motivo:_rpFsParse(f.motivo),data:_rpFsParse(f.data),dataDevolucao:_rpFsParse(f.dataDevolucao),status:_rpFsParse(f.status)||"pendente",justificativa:_rpFsParse(f.justificativa),criadoEm:_rpFsParse(f.criadoEm)||0};
       });
       itens.sort(function(a,b){return b.criadoEm-a.criadoEm;});
       var el=document.getElementById("rp-solic-lista");if(!el)return;
@@ -566,34 +627,78 @@ function _rpMostrarSolicMenu(){
         var stCls=it.status==="deferido"?"deferido":it.status==="indeferido"?"indeferido":"pendente";
         var stLbl=it.status==="deferido"?"✅ Deferido":it.status==="indeferido"?"❌ Indeferido":"🕓 Pendente";
         var dt=it.data?new Date(it.data+"T00:00:00").toLocaleDateString("pt-BR"):"—";
+        var dtDev=it.dataDevolucao?new Date(it.dataDevolucao+"T00:00:00").toLocaleDateString("pt-BR"):null;
+        var nomes=(it.itens||[]).join(", ")||"—";
         return '<div class="rp-culto-item" style="align-items:flex-start;flex-direction:column;cursor:default">'
           +'<div style="display:flex;justify-content:space-between;width:100%;align-items:center;gap:8px">'
-          +'<div class="rp-culto-nome">'+(it.item||"—")+'</div><span class="rp-solic-badge '+stCls+'">'+stLbl+'</span></div>'
-          +'<div class="rp-culto-sub">Para dia '+dt+(it.motivo?" · "+it.motivo:"")+'</div>'
+          +'<div class="rp-culto-nome">'+nomes+'</div><span class="rp-solic-badge '+stCls+'">'+stLbl+'</span></div>'
+          +'<div class="rp-culto-sub">Para dia '+dt+(dtDev?" · devolução até "+dtDev:"")+(it.motivo?" · "+it.motivo:"")+'</div>'
           +(it.justificativa?'<div class="rp-culto-sub" style="margin-top:4px;font-style:italic">💬 '+it.justificativa+'</div>':'')
           +'</div>';
       }).join("");
     }).catch(function(){var el=document.getElementById("rp-solic-lista");if(el)el.innerHTML='<p class="rp-sub">Erro ao carregar.</p>';});
 }
 function _rpMostrarSolicNova(){
-  _RP.state="solic-nova";
+  _RP.state="solic-nova";_RP.solicItens=[];
   var hoje=new Date().toISOString().slice(0,10);
+  _rpHtml(_rpHdr("_rpMostrarSolicMenu")+'<p class="rp-sub" style="margin-top:4px">&#9203; Carregando itens dispon&#237;veis...</p>');
+  fetch(_RP_INSTRUMENTOS_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():{itens:[]};}).catch(function(){return{itens:[]};}).then(function(cfg){
+    _RP.instrumentosDisponiveis=cfg.itens||[];
+    _rpRenderSolicNova(hoje);
+  });
+}
+function _rpRenderSolicNova(hoje){
+  var opts=(_RP.instrumentosDisponiveis||[]).map(function(x){return'<option value="'+x+'">'+x+'</option>';}).join("")+'<option value="__outro__">Outro (digitar)...</option>';
+  var chips=(_RP.solicItens||[]).map(function(it,i){return'<span class="rp-chip">'+it+' <a onclick="_rpRemoverItemSolic('+i+')">&times;</a></span>';}).join("");
   _rpHtml(_rpHdr("_rpMostrarSolicMenu")
     +'<label class="rp-label" style="margin-top:2px">Data</label>'
     +'<input class="rp-inp" type="date" id="solic-data" min="'+hoje+'">'
     +'<label class="rp-label">Equipamento / Instrumento</label>'
-    +'<input class="rp-inp" type="text" id="solic-item" placeholder="Ex: Violão, DI Box, Pedal...">'
+    +'<div style="display:flex;gap:6px">'
+    +'<select class="rp-sel" id="solic-item-sel" style="flex:1;margin-bottom:0">'+opts+'</select>'
+    +'<button class="rp-btn-out" style="width:auto" onclick="_rpAdicionarItemSolic()">+ Adicionar</button>'
+    +'</div>'
+    +'<input class="rp-inp" type="text" id="solic-item-custom" style="display:none;margin-top:8px" placeholder="Digite o nome do equipamento">'
+    +'<div id="solic-itens-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">'+chips+'</div>'
     +'<label class="rp-label">Motivo</label>'
     +'<textarea class="rp-inp" id="solic-motivo" rows="3" style="resize:vertical" placeholder="Explique o motivo da solicitação"></textarea>'
-    +'<div class="rp-err" id="solic-err" style="display:none">Preencha data, equipamento e motivo.</div>'
+    +'<label class="rp-label">Dia para devolução</label>'
+    +'<input class="rp-inp" type="date" id="solic-data-devolucao" min="'+hoje+'">'
+    +'<div class="rp-err" id="solic-err" style="display:none">Preencha data, ao menos um equipamento e motivo.</div>'
     +'<button class="rp-btn" onclick="_rpEnviarSolic()">Enviar solicitação</button>');
+  var sel=document.getElementById("solic-item-sel");
+  if(sel)sel.onchange=function(){var c=document.getElementById("solic-item-custom");if(c)c.style.display=sel.value==="__outro__"?"block":"none";};
+}
+function _rpSolicPreservarCampos(fn){
+  var data=document.getElementById("solic-data")?document.getElementById("solic-data").value:"";
+  var dataDev=document.getElementById("solic-data-devolucao")?document.getElementById("solic-data-devolucao").value:"";
+  var motivo=document.getElementById("solic-motivo")?document.getElementById("solic-motivo").value:"";
+  var hoje=new Date().toISOString().slice(0,10);
+  fn();
+  _rpRenderSolicNova(hoje);
+  if(document.getElementById("solic-data"))document.getElementById("solic-data").value=data;
+  if(document.getElementById("solic-data-devolucao"))document.getElementById("solic-data-devolucao").value=dataDev;
+  if(document.getElementById("solic-motivo"))document.getElementById("solic-motivo").value=motivo;
+}
+function _rpAdicionarItemSolic(){
+  _rpSolicPreservarCampos(function(){
+    var sel=document.getElementById("solic-item-sel");
+    var val=sel.value==="__outro__"?(document.getElementById("solic-item-custom").value||"").trim():sel.value;
+    if(!val)return;
+    _RP.solicItens=_RP.solicItens||[];
+    if(_RP.solicItens.indexOf(val)<0)_RP.solicItens.push(val);
+  });
+}
+function _rpRemoverItemSolic(i){
+  _rpSolicPreservarCampos(function(){_RP.solicItens.splice(i,1);});
 }
 function _rpEnviarSolic(){
   var data=document.getElementById("solic-data").value;
-  var item=document.getElementById("solic-item").value.trim();
+  var itens=_RP.solicItens||[];
   var motivo=document.getElementById("solic-motivo").value.trim();
-  if(!data||!item||!motivo){var e=document.getElementById("solic-err");if(e)e.style.display="block";return;}
-  var payload={grupo:_RP.slug,grupoNome:_RP.nome,data:data,item:item,motivo:motivo,status:"pendente",criadoEm:Date.now()};
+  var dataDevolucao=document.getElementById("solic-data-devolucao").value;
+  if(!data||!itens.length||!motivo){var e=document.getElementById("solic-err");if(e)e.style.display="block";return;}
+  var payload={grupo:_RP.slug,grupoNome:_RP.nome,data:data,itens:itens,dataDevolucao:dataDevolucao||null,motivo:motivo,status:"pendente",criadoEm:Date.now()};
   var fields={};Object.keys(payload).forEach(function(k){fields[k]=_rpFsEnc(payload[k]);});
   var url="https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/solicitacoes?key="+_RP_KEY;
   fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fields:fields})})
