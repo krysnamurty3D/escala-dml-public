@@ -507,7 +507,12 @@ function _carregarEscalaPublica(){
   });
 }
 _carregarEscalaPublica();
-var COMUNICADOS_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/comunicados.json";
+function _rpConfigFetch(docId){
+  var url="https://firestore.googleapis.com/v1/projects/escala-dml/databases/(default)/documents/configPublica/"+docId+"?key=AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc&_="+Date.now();
+  return fetch(url).then(function(r){return r.ok?r.json():null;}).then(function(doc){
+    return(doc&&doc.fields)?_rpFsParse({mapValue:{fields:doc.fields}}):null;
+  }).catch(function(){return null;});
+}
 function _mostrarAvisoOverlay(d){
   var ov=document.createElement("div");ov.className="aviso-overlay";ov.id="aviso-ov";
   ov.innerHTML='<div class="aviso-box">'
@@ -523,7 +528,7 @@ function fecharAviso(){
   var ov=document.getElementById("aviso-ov");if(ov)ov.remove();
   try{if(window._avisoId)localStorage.setItem("dml-aviso-id",window._avisoId);}catch(e){}
 }
-fetch(COMUNICADOS_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
+_rpConfigFetch("comunicados").then(function(d){
   var lista=(d&&Array.isArray(d.lista))?d.lista:[];
   if(!lista.length)return;
   var ultimo=lista[lista.length-1];
@@ -533,9 +538,6 @@ fetch(COMUNICADOS_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():nu
 }).catch(function(){});
 var _RP={state:"login",flow:null,slug:null,nome:null,cultoKey:null,cultoLabel:null,cfg:null,fsDoc:null};
 var _RP_PROJ="escala-dml",_RP_KEY="AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc";
-var _RP_CFG_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/rider-config.json";
-var _RP_CHECKLIST_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/checklist-config.json";
-var _RP_INSTRUMENTOS_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/instrumentos-config.json";
 var _RP_INSTRS=["BATERIA","BAIXO","CAJON","GUITARRA","PIANO","TECLADO","VIOLÃO","VS"];
 function _rpSlug(n){return(n||"").toLowerCase().replace(/[àáâãä]/g,"a").replace(/[èéêë]/g,"e").replace(/[ìíîï]/g,"i").replace(/[òóôõö]/g,"o").replace(/[ùúûü]/g,"u").replace(/ç/g,"c").replace(/[^a-z0-9]/g,"_").replace(/_+/g,"_").replace(/^_|_$/g,"");}
 function _rpFsParse(v){if(!v)return null;if(v.stringValue!==undefined)return v.stringValue;if(v.integerValue!==undefined)return parseInt(v.integerValue);if(v.booleanValue!==undefined)return v.booleanValue;if(v.nullValue!==undefined)return null;if(v.arrayValue)return(v.arrayValue.values||[]).map(_rpFsParse);if(v.mapValue){var o={};Object.entries(v.mapValue.fields||{}).forEach(function(e){o[e[0]]=_rpFsParse(e[1]);});return o;}return null;}
@@ -604,7 +606,7 @@ function _rpBtnAgendaExterna(){return'<button class="rp-btn-out" style="width:10
 function _rpMostrarComunicacoes(){
   _RP.state="comunic";
   _rpHtml(_rpHdr("_rpMostrarHome")+"<p class=\"rp-sub\" style=\"margin-top:4px\"><i class=ph-hourglass></i> Carregando avisos...</p>");
-  fetch(COMUNICADOS_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
+  _rpConfigFetch("comunicados").then(function(d){
     var lista=(d&&Array.isArray(d.lista))?[...d.lista].reverse():[];
     if(!lista.length){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub" style="margin-top:4px">Nenhum comunicado no momento.</p>'+_rpBtnAgendaExterna());return;}
     var itens=lista.map(function(c){
@@ -616,7 +618,7 @@ function _rpMostrarComunicacoes(){
 }
 function _rpMostrarLogin(){
   _RP.state="login";_RP.nome=null;_RP.cultoKey=null;_RP.cultoLabel=null;
-  fetch(_RP_CFG_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(cfg){
+  _rpConfigFetch("riderConfig").then(function(cfg){
     _RP.cfg=cfg;
     var grupos=cfg&&cfg.grupos?Object.values(cfg.grupos).filter(function(g){return g.pin;}).sort(function(a,b){return a.nome.localeCompare(b.nome);}):[];
     if(_RP.flow==="estudio")grupos=grupos.filter(function(g){return _RP_GRUPOS_LOUVOR.indexOf(g.nome)>=0;});
@@ -702,7 +704,7 @@ function _rpMostrarSolicNova(){
   _RP.state="solic-nova";_RP.solicItens=[];
   var hoje=new Date().toISOString().slice(0,10);
   _rpHtml(_rpHdr("_rpMostrarSolicMenu")+'<p class="rp-sub" style="margin-top:4px"><i class=ph-hourglass></i> Carregando itens dispon&#237;veis...</p>');
-  fetch(_RP_INSTRUMENTOS_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():{itens:[]};}).catch(function(){return{itens:[]};}).then(function(cfg){
+  _rpConfigFetch("instrumentos").then(function(cfg){cfg=cfg||{itens:[]};
     _RP.instrumentosDisponiveis=cfg.itens||[];
     _rpRenderSolicNova(hoje);
   });
@@ -807,7 +809,7 @@ function _rpMostrarEnsaio(){
   _RP.ensaioKey=_rpEnsaioYmd(dataCiclo);_RP.ensaioDiaLbl=DIAS[dataCiclo.getDay()];_RP.ensaioHora=hora;
   _rpHtml(_rpHdr("_rpMostrarHome")+"<p class=\"rp-sub\"><i class=ph-hourglass></i> Carregando...</p>");
   var pDoc=fetch("https://firestore.googleapis.com/v1/projects/"+_RP_PROJ+"/databases/(default)/documents/estudio/"+_RP.slug+"?key="+_RP_KEY).then(function(r){return r.ok?r.json():{};});
-  var pCfg=fetch(_RP_CHECKLIST_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():{itens:[]};}).catch(function(){return{itens:[]};});
+  var pCfg=_rpConfigFetch("checklist").then(function(cfg){return cfg||{itens:[]};});
   Promise.all([pDoc,pCfg]).then(function(res){
     _RP.estudioDoc=res[0];_RP.checklistItens=res[1].itens||[];
     var ensaios=res[0].fields&&res[0].fields.ensaios?_rpFsParse(res[0].fields.ensaios):{};
