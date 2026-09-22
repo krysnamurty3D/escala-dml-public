@@ -169,5 +169,8 @@
     "tecnico": "",
     "midia": "",
     "surdos": ""
-  }
+  },
+  "ocultos": [
+    "SEMEARTE"
+  ]
 }
