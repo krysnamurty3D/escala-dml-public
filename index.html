@@ -165,6 +165,8 @@ body.light .aguardando-titulo{color:#4a6070;}body.light .aguardando-sub{color:#7
 .rp-close:hover{color:#fff;background:rgba(255,255,255,.1);}
 .rp-title{font-size:15px;font-weight:800;color:#2ab482;margin-bottom:2px;}
 .rp-sub{font-size:11px;color:#7a9aa8;margin-bottom:18px;}
+.rp-com-item{border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:14px;margin-bottom:14px;}
+.rp-com-item:last-child{border-bottom:none;}
 .rp-label{display:block;font-size:11px;font-weight:700;color:#7a9aa8;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
 .rp-inp{width:100%;background:#162030;border:1px solid #2a3a4a;border-radius:8px;color:#edf4f4;font-size:14px;padding:10px 12px;font-family:inherit;outline:none;margin-bottom:14px;}
 .rp-inp:focus{border-color:#2ab482;}
@@ -500,7 +502,7 @@ function _carregarEscalaPublica(){
   });
 }
 _carregarEscalaPublica();
-var AVISO_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/aviso.json";
+var COMUNICADOS_URL="https://raw.githubusercontent.com/krysnamurty3D/escala-dml-public/main/comunicados.json";
 function _mostrarAvisoOverlay(d){
   var ov=document.createElement("div");ov.className="aviso-overlay";ov.id="aviso-ov";
   ov.innerHTML='<div class="aviso-box">'
@@ -516,11 +518,13 @@ function fecharAviso(){
   var ov=document.getElementById("aviso-ov");if(ov)ov.remove();
   try{if(window._avisoId)localStorage.setItem("dml-aviso-id",window._avisoId);}catch(e){}
 }
-fetch(AVISO_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
-  if(!d||!d.ativo||!d.mensagem)return;
+fetch(COMUNICADOS_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
+  var lista=(d&&Array.isArray(d.lista))?d.lista:[];
+  if(!lista.length)return;
+  var ultimo=lista[lista.length-1];
   var visto=localStorage.getItem("dml-aviso-id");
-  if(visto===d.id)return;
-  _mostrarAvisoOverlay(d);
+  if(visto===ultimo.id)return;
+  _mostrarAvisoOverlay(ultimo);
 }).catch(function(){});
 var _RP={state:"login",flow:null,slug:null,nome:null,cultoKey:null,cultoLabel:null,cfg:null,fsDoc:null};
 var _RP_PROJ="escala-dml",_RP_KEY="AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc";
@@ -595,10 +599,15 @@ function _rpBtnAgendaExterna(){return'<button class="rp-btn-out" style="width:10
 function _rpMostrarComunicacoes(){
   _RP.state="comunic";
   _rpHtml(_rpHdr("_rpMostrarHome")+"<p class=\"rp-sub\" style=\"margin-top:4px\"><i class=ph-hourglass></i> Carregando avisos...</p>");
-  fetch(AVISO_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
-    if(!d||!d.ativo||!d.mensagem){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub" style="margin-top:4px">Nenhum aviso no momento.</p>'+_rpBtnAgendaExterna());return;}
-    _rpHtml(_rpHdr("_rpMostrarHome")+(d.titulo?'<div class="rp-title">'+d.titulo+'</div>':'')+'<div class="rp-sub" style="color:#c8d8e8;white-space:pre-wrap;margin-top:8px">'+d.mensagem+'</div>'+_rpBtnAgendaExterna());
-  }).catch(function(){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub">Erro ao carregar aviso.</p>'+_rpBtnAgendaExterna());});
+  fetch(COMUNICADOS_URL+"?_="+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    var lista=(d&&Array.isArray(d.lista))?[...d.lista].reverse():[];
+    if(!lista.length){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub" style="margin-top:4px">Nenhum comunicado no momento.</p>'+_rpBtnAgendaExterna());return;}
+    var itens=lista.map(function(c){
+      var dt=c.criadoEm?new Date(c.criadoEm).toLocaleDateString("pt-BR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+      return '<div class="rp-com-item">'+(c.titulo?'<div class="rp-title" style="font-size:14px">'+c.titulo+'</div>':"")+'<div class="rp-sub" style="color:#c8d8e8;white-space:pre-wrap;margin-top:4px">'+c.mensagem+'</div><div class="rp-sub" style="font-size:10px;margin-top:4px">'+dt+'</div></div>';
+    }).join("");
+    _rpHtml(_rpHdr("_rpMostrarHome")+'<div style="margin-top:8px">'+itens+'</div>'+_rpBtnAgendaExterna());
+  }).catch(function(){_rpHtml(_rpHdr("_rpMostrarHome")+'<p class="rp-sub">Erro ao carregar comunicados.</p>'+_rpBtnAgendaExterna());});
 }
 function _rpMostrarLogin(){
   _RP.state="login";_RP.nome=null;_RP.cultoKey=null;_RP.cultoLabel=null;
@@ -925,8 +934,7 @@ function _rpRenderEditor(inp,set){
   var shareBtns=
     '<div class="rp-share-row">'
     +'<button class="rp-share-btn" onclick="_rpShare(\'tecnico\')"><span><i class=ph-sliders></i></span>Técnico</button>'
-    +'<button class="rp-share-btn" onclick="_rpShare(\'midia\')"><span><i class=ph-television-simple></i></span>Mídia</button>'
-    +'<button class="rp-share-btn" onclick="_rpShare(\'surdos\')"><span><i class=ph-ear></i></span>Surdos</button>'
+    +'<button class="rp-share-btn" onclick="_rpShare(\'midiasurdos\')"><span><i class=ph-television-simple></i></span>Mídia/Surdos</button>'
     +'</div>';
   _rpHtml(_rpHdr("_rpMostrarCultos")
     +'<div class="rp-sec" style="margin-top:4px"><i class=ph-microphone></i> Vozes</div>'
@@ -992,14 +1000,14 @@ function _rpFmtInp(inputList,voz){
 function _rpShare(dest){
   var d=_rpColeta();
   var cont=(_RP.cfg&&_RP.cfg.contatos)||{};
-  var phone=dest==="tecnico"?cont.tecnico:dest==="midia"?cont.midia:cont.surdos;
   var hdr="*Rider — "+_RP.nome+"*\n"+_RP.cultoLabel+"\n\n";
   var setTxt=d.setList.length?"*SET LIST*\n"+d.setList.map(function(r,i){return(i+1)+". "+r.musica+(r.solo?" — Solo: "+r.solo:"");}).join("\n"):"";
   var inpTxt=(dest==="tecnico")?"*INPUT LIST*\n"+_rpFmtInp(d.inputList,d.voz)+"\n\n":"";
   var obsTxt=(dest==="tecnico"&&d.obs)?"\n*Observações*\n"+d.obs+"\n":"";
   var txt=hdr+inpTxt+setTxt+obsTxt;
-  var url=phone?"https://wa.me/"+phone.replace(/\D/g,"")+"?text="+encodeURIComponent(txt):"https://wa.me/?text="+encodeURIComponent(txt);
-  window.open(url,"_blank");
+  function abrirWa(phone){var url=phone?"https://wa.me/"+phone.replace(/\D/g,"")+"?text="+encodeURIComponent(txt):"https://wa.me/?text="+encodeURIComponent(txt);window.open(url,"_blank");}
+  if(dest==="midiasurdos"){abrirWa(cont.midia);abrirWa(cont.surdos);}
+  else{abrirWa(dest==="tecnico"?cont.tecnico:cont.surdos);}
 }
 function _phPatch(root){(root||document).querySelectorAll('i[class]').forEach(function(el){if(/(?:^| )ph-/.test(el.className))el.classList.add("ph");});}
 document.addEventListener("DOMContentLoaded",function(){_phPatch();});
