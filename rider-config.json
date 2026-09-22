@@ -159,6 +159,10 @@
       "pin": "4268",
       "ensaioDia": 6,
       "ensaioHora": "08:00"
+    },
+    "grupo_convidado": {
+      "nome": "GRUPO CONVIDADO",
+      "pin": ""
     }
   },
   "contatos": {
