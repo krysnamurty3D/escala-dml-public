@@ -1,116 +1,67 @@
 {
+  "ocultos": [
+    "DIAC. MARCOS ANTÔNIO"
+  ],
   "grupos": {
-    "semearte": {
-      "nome": "SEMEARTE",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "kyrios": {
-      "nome": "KYRIOS",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
     "coral_robert_kalley": {
-      "nome": "CORAL ROBERT KALLEY",
+      "ensaioHora": "19:30",
+      "ensaioDia": null,
       "pin": "1111",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
+      "nome": "CORAL ROBERT KALLEY"
     },
-    "coral_cancao_de_paz": {
-      "nome": "CORAL CANÇÃO DE PAZ",
-      "pin": "",
+    "adoradoras_do_rei": {
       "ensaioDia": null,
-      "ensaioHora": "19:30"
+      "ensaioHora": "19:30",
+      "nome": "ADORADORAS DO REI",
+      "pin": ""
     },
-    "coral_crescendo_em_cristo": {
-      "nome": "CORAL CRESCENDO EM CRISTO",
+    "daniel_e_jane": {
+      "ensaioHora": "19:30",
+      "ensaioDia": null,
+      "nome": "DANIEL E JANE",
+      "pin": ""
+    },
+    "tchai_e_vanderlea": {
+      "ensaioDia": null,
+      "nome": "TCHAI E VANDERLÉA",
+      "ensaioHora": "19:30",
+      "pin": ""
+    },
+    "irma_goretti": {
       "pin": "",
+      "nome": "IRMÃ GORETTI",
       "ensaioDia": null,
       "ensaioHora": "19:30"
     },
     "quarteto_kerigma": {
-      "nome": "QUARTETO KERIGMA",
       "pin": "",
+      "nome": "QUARTETO KERIGMA",
       "ensaioDia": null,
       "ensaioHora": "19:30"
+    },
+    "canto_novo": {
+      "ensaioDia": 5,
+      "nome": "CANTO NOVO",
+      "pin": "5425",
+      "ensaioHora": "19:20"
     },
     "levitas_do_senhor": {
+      "ensaioHora": "19:30",
       "nome": "LEVITAS DO SENHOR",
       "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "adoradoras_do_rei": {
-      "nome": "ADORADORAS DO REI",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "chama_ardente": {
-      "nome": "CHAMA ARDENTE",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "bandinha_de_casais": {
-      "nome": "BANDINHA DE CASAIS",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
+      "ensaioDia": null
     },
     "thiago_e_gabrielly_lemos": {
       "nome": "THIAGO E GABRIELLY LEMOS",
-      "pin": "",
       "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "rivailda": {
-      "nome": "RIVAILDA",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "diac_marcos_antonio": {
-      "nome": "DIAC. MARCOS ANTÔNIO",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "irma_goretti": {
-      "nome": "IRMÃ GORETTI",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "essinho": {
-      "nome": "ESSINHO",
+      "ensaioHora": "19:30",
       "pin": ""
     },
-    "tchai_e_vanderlea": {
-      "nome": "TCHAI E VANDERLÉA",
+    "chama_ardente": {
       "pin": "",
+      "ensaioHora": "19:30",
       "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "daniel_e_jane": {
-      "nome": "DANIEL E JANE",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "programacao_exclusiva_da_men": {
-      "nome": "PROGRAMAÇÃO EXCLUSIVA DA MEN",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "programacao_exclusiva_da_uhc": {
-      "nome": "PROGRAMAÇÃO EXCLUSIVA DA UHC",
-      "pin": "",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
+      "nome": "CHAMA ARDENTE"
     },
     "panda": {
       "nome": "PANDA",
@@ -118,59 +69,110 @@
       "ensaioDia": null,
       "ensaioHora": "19:30"
     },
-    "adonai": {
-      "nome": "ADONAI",
-      "pin": "2177",
-      "ensaioDia": 6,
-      "ensaioHora": "10:00"
-    },
-    "adorare": {
-      "nome": "ADORARE",
-      "pin": "4754",
-      "ensaioDia": 1,
-      "ensaioHora": "19:30"
-    },
     "atrios_de_louvor": {
-      "nome": "ÁTRIOS DE LOUVOR",
+      "ensaioHora": "19:30",
       "pin": "2312",
       "ensaioDia": 3,
-      "ensaioHora": "19:30"
+      "nome": "ÁTRIOS DE LOUVOR"
     },
-    "canto_novo": {
-      "nome": "CANTO NOVO",
-      "pin": "5425",
-      "ensaioDia": 5,
-      "ensaioHora": "19:20"
+    "semearte": {
+      "pin": "",
+      "ensaioHora": "19:30",
+      "nome": "SEMEARTE",
+      "ensaioDia": null
+    },
+    "essinho": {
+      "nome": "ESSINHO",
+      "pin": ""
+    },
+    "diac_marcos_antonio": {
+      "nome": "DIAC. MARCOS ANTÔNIO",
+      "ensaioHora": "19:30",
+      "pin": "",
+      "ensaioDia": null
+    },
+    "adonai": {
+      "nome": "ADONAI",
+      "ensaioHora": "10:00",
+      "pin": "2177",
+      "ensaioDia": 6
+    },
+    "adorare": {
+      "ensaioHora": "19:30",
+      "pin": "4754",
+      "ensaioDia": null,
+      "nome": "ADORARE"
     },
     "comunhao": {
-      "nome": "COMUNHÃO",
       "pin": "4983",
       "ensaioDia": 6,
-      "ensaioHora": "16:00"
-    },
-    "louvor_congregacional": {
-      "nome": "LOUVOR CONGREGACIONAL",
-      "pin": "4945",
-      "ensaioDia": null,
-      "ensaioHora": "19:30"
-    },
-    "redencao": {
-      "nome": "REDENÇÃO",
-      "pin": "4268",
-      "ensaioDia": 6,
-      "ensaioHora": "08:00"
+      "ensaioHora": "16:00",
+      "nome": "COMUNHÃO"
     },
     "grupo_convidado": {
       "nome": "GRUPO CONVIDADO",
+      "pin": "",
+      "ensaioDia": null,
+      "ensaioHora": "19:30"
+    },
+    "bandinha_de_casais": {
+      "nome": "BANDINHA DE CASAIS",
+      "pin": "",
+      "ensaioHora": "19:30",
+      "ensaioDia": null
+    },
+    "rivailda": {
+      "ensaioHora": "19:30",
+      "pin": "",
+      "nome": "RIVAILDA",
+      "ensaioDia": null
+    },
+    "coral_cancao_de_paz": {
+      "ensaioHora": "19:30",
+      "ensaioDia": null,
+      "nome": "CORAL CANÇÃO DE PAZ",
+      "pin": ""
+    },
+    "programacao_exclusiva_da_men": {
+      "ensaioHora": "19:30",
+      "ensaioDia": null,
+      "nome": "PROGRAMAÇÃO EXCLUSIVA DA MEN",
+      "pin": ""
+    },
+    "programacao_exclusiva_da_uhc": {
+      "ensaioHora": "19:30",
+      "ensaioDia": null,
+      "nome": "PROGRAMAÇÃO EXCLUSIVA DA UHC",
+      "pin": ""
+    },
+    "louvor_congregacional": {
+      "ensaioHora": "19:30",
+      "pin": "4945",
+      "nome": "LOUVOR CONGREGACIONAL",
+      "ensaioDia": null
+    },
+    "redencao": {
+      "ensaioDia": 6,
+      "nome": "REDENÇÃO",
+      "pin": "4268",
+      "ensaioHora": "08:00"
+    },
+    "kyrios": {
+      "nome": "KYRIOS",
+      "ensaioDia": null,
+      "ensaioHora": "19:30",
+      "pin": ""
+    },
+    "coral_crescendo_em_cristo": {
+      "ensaioHora": "19:30",
+      "nome": "CORAL CRESCENDO EM CRISTO",
+      "ensaioDia": null,
       "pin": ""
     }
   },
   "contatos": {
+    "surdos": "",
     "tecnico": "",
-    "midia": "",
-    "surdos": ""
-  },
-  "ocultos": [
-    "DIAC. MARCOS ANTÔNIO"
-  ]
+    "midia": ""
+  }
 }
