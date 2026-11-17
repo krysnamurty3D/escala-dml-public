@@ -622,25 +622,33 @@ function _rpMostrarLogin(){
   _RP.state="login";_RP.nome=null;_RP.cultoKey=null;_RP.cultoLabel=null;
   _rpConfigFetch("riderConfig").then(function(cfg){
     _RP.cfg=cfg;
-    var grupos=cfg&&cfg.grupos?Object.values(cfg.grupos).filter(function(g){return g.pin;}).sort(function(a,b){return a.nome.localeCompare(b.nome);}):[];
+    var exigePin=!(cfg&&cfg.exigirPin===false);
+    var grupos=cfg&&cfg.grupos?Object.values(cfg.grupos).filter(function(g){return exigePin?g.pin:true;}).sort(function(a,b){return a.nome.localeCompare(b.nome);}):[];
     if(_RP.flow==="estudio")grupos=grupos.filter(function(g){return _RP_GRUPOS_LOUVOR.indexOf(g.nome)>=0;});
     if(!grupos.length){_rpHtml(_rpHdr("_rpMostrarHome")+"<p class=\"rp-sub\">Nenhum grupo configurado ainda.</p>");return;}
     var opts=grupos.map(function(g){return'<option value="'+_rpSlug(g.nome)+'">'+g.nome+'</option>';}).join("");
+    var pinHtml=exigePin
+      ?'<label class="rp-label">PIN</label>'
+        +'<input class="rp-inp" type="password" id="rp-pin" maxlength="6" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" onkeydown="if(event.keyCode===13)_rpLogin()">'
+        +'<div class="rp-err" id="rp-err" style="display:none">PIN incorreto.</div>'
+      :'';
     _rpHtml(_rpHdr("_rpMostrarHome")
       +'<label class="rp-label" style="margin-top:2px">Grupo</label>'
       +'<select class="rp-sel" id="rp-grupo">'+opts+'</select>'
-      +'<label class="rp-label">PIN</label>'
-      +'<input class="rp-inp" type="password" id="rp-pin" maxlength="6" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" onkeydown="if(event.keyCode===13)_rpLogin()">'
-      +'<div class="rp-err" id="rp-err" style="display:none">PIN incorreto.</div>'
+      +pinHtml
       +'<button class="rp-btn" onclick="_rpLogin()">Entrar</button>');
   }).catch(function(){_rpHtml('<p style="color:#e06060;font-size:12px">Erro ao carregar configura&#231;&#227;o.</p>');});
 }
 function _rpLogin(){
   var slug=document.getElementById("rp-grupo").value;
-  var pin=document.getElementById("rp-pin").value;
   var grupos=_RP.cfg&&_RP.cfg.grupos?_RP.cfg.grupos:{};
   var grp=grupos[slug];
-  if(!grp||String(grp.pin)!==String(pin)){var e=document.getElementById("rp-err");if(e)e.style.display="block";return;}
+  var exigePin=!(_RP.cfg&&_RP.cfg.exigirPin===false);
+  if(!grp){var e=document.getElementById("rp-err");if(e)e.style.display="block";return;}
+  if(exigePin){
+    var pin=document.getElementById("rp-pin")?document.getElementById("rp-pin").value:"";
+    if(String(grp.pin)!==String(pin)){var e=document.getElementById("rp-err");if(e)e.style.display="block";return;}
+  }
   _RP.slug=slug;_RP.nome=grp.nome;
   if(_RP.flow==="estudio")_rpMostrarEnsaio();else if(_RP.flow==="comunicacao")_rpMostrarAgendaExterna();else _rpMostrarCultos();
 }
