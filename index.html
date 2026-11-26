@@ -530,6 +530,20 @@ function _carregarEscalaPublica(){
   });
 }
 _carregarEscalaPublica();
+(function(){
+  try{
+    if(location.search.indexOf("sc=1")>=0)localStorage.setItem("dml-sem-contagem","1");
+    if(localStorage.getItem("dml-sem-contagem"))return;
+    if(sessionStorage.getItem("dml-visita-contada"))return;
+    sessionStorage.setItem("dml-visita-contada","1");
+    var d=new Date();
+    var dia=d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
+    var unico=localStorage.getItem("dml-visitante-dia")!==dia;
+    localStorage.setItem("dml-visitante-dia",dia);
+    var doc="projects/escala-dml/databases/(default)/documents/visualizacoes/"+dia;
+    fetch("https://firestore.googleapis.com/v1/projects/escala-dml/databases/(default)/documents:commit?key=AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({writes:[{update:{name:doc,fields:{dia:{stringValue:dia}}},updateMask:{fieldPaths:["dia"]},updateTransforms:[{fieldPath:"total",increment:{integerValue:"1"}},{fieldPath:"unicos",increment:{integerValue:unico?"1":"0"}}]}]})}).catch(function(){});
+  }catch(e){}
+})();
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw-cache.js").catch(function(e){console.warn("Cache offline indisponível:",e);});}
 function _rpConfigFetch(docId){
   var url="https://firestore.googleapis.com/v1/projects/escala-dml/databases/(default)/documents/configPublica/"+docId+"?key=AIzaSyCAm-k7_6djFPDgO-RMMtiknGT-LCnnTBc&_="+Date.now();
